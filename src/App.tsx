@@ -1,21 +1,18 @@
+import 'react-native-gesture-handler';
 import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-} from 'react-native';
+import { StatusBar, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+
+import Routes from './routes';
 
 const App: React.FC = () => {
   return (
-    <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <Text>Teste 2</Text>
-      </SafeAreaView>
-    </>
+    <NavigationContainer>
+      <StatusBar barStyle="dark-content" backgroundColor="#1e1e1e" />
+      <View style={{ backgroundColor: '#000', flex: 1 }}>
+        <Routes />
+      </View>
+    </NavigationContainer>
   );
 };
 
