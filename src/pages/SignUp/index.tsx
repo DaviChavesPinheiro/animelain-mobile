@@ -62,6 +62,7 @@ const SignUp: React.FC = () => {
           <Input
             ref={passwordInputRef}
             secureTextEntry
+            autoCapitalize="none"
             name="password"
             icon="lock"
             placeholder="Senha"
