@@ -69,7 +69,14 @@ const SignIn: React.FC = () => {
         }
 
         if (err.isAxiosError) {
-          setErrorMessage('E-mail/senha incorreto(a), sempai.');
+          switch (err.response.data.message) {
+            case 'Incorrect email/password combination.':
+              setErrorMessage('E-mail/senha incorreto(a), sempai.');
+              break;
+
+            default:
+              break;
+          }
           return;
         }
 

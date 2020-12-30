@@ -65,9 +65,14 @@ const SignUp: React.FC = () => {
 
           return;
         }
-
         if (err.isAxiosError) {
-          setErrorMessage('E-mail ou nome já estão em uso, escolha um outro.');
+          switch (err.response.data.message) {
+            case 'Email address already taken':
+              setErrorMessage('Esse e-mail já está cadastrado, sempai.');
+              break;
+            default:
+              break;
+          }
           return;
         }
 
