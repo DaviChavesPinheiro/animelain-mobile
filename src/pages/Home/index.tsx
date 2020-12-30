@@ -1,15 +1,39 @@
 import React from 'react';
-import { ScrollView } from 'react-native-gesture-handler';
-import { Container, Logo } from './styles';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { Container, Header, HeaderIcon, HeaderTitle } from './styles';
 
-import logoImg from '../../assets/logo.png';
+import Favorites from '../Favorites';
+
+const Tab = createMaterialTopTabNavigator();
 
 const Home: React.FC = () => {
   return (
     <Container>
-      <ScrollView style={{ marginBottom: 42 }}>
-        <Logo source={logoImg} resizeMode="contain" />
-      </ScrollView>
+      <Header>
+        <HeaderTitle>Anime Lain</HeaderTitle>
+        <HeaderIcon name="search" size={20} />
+      </Header>
+      <Tab.Navigator
+        tabBarOptions={{
+          activeTintColor: '#03a9f5',
+          inactiveTintColor: '#5e5e5e',
+          indicatorContainerStyle: {
+            backgroundColor: '#1e1e1e',
+          },
+          indicatorStyle: {
+            backgroundColor: '#03a9f5',
+            height: 3,
+          },
+          labelStyle: {
+            fontSize: 12,
+            fontFamily: 'Roboto-Medium',
+          },
+        }}
+      >
+        <Tab.Screen name="RECOMENDADO" component={Favorites} />
+        <Tab.Screen name="NOVOS" component={Favorites} />
+        <Tab.Screen name="TEMPORADA" component={Favorites} />
+      </Tab.Navigator>
     </Container>
   );
 };

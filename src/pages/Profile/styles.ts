@@ -10,7 +10,6 @@ export const Header = styled.View`
   background-color: #1e1e1e;
   flex-direction: row;
   padding: 16px;
-  padding-bottom: 6px;
 
   align-items: center;
 `;
@@ -25,4 +24,16 @@ export const HeaderTitle = styled.Text`
 export const HeaderIcon = styled(FeatherIcons)`
   color: #fff;
   font-size: 24px;
+`;
+
+export const Avatar = styled.Image`
+  width: 128px;
+  height: 128px;
+
+  border-radius: 64px;
+
+  align-self: center;
+  margin-top: 30px;
+  border-color: #1e1e1e;
+  border-width: 3px;
 `;
