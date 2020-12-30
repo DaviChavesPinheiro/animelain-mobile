@@ -5,7 +5,6 @@ import { useNavigation } from '@react-navigation/native';
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
 import { Alert, TextInput } from 'react-native';
-import { AxiosError } from 'axios';
 import * as Yup from 'yup';
 import getValidationErrors from '../../utils/getValidationErrors';
 import {
