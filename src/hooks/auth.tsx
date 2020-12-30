@@ -67,10 +67,6 @@ export const AuthProvider: React.FC = ({ children }) => {
 
     const { token, user } = response.data;
 
-    if (!user.isAdmin) {
-      throw new Error('Unauthorized');
-    }
-
     await AsyncStorage.multiSet([
       ['@AnimeLain:token', token],
       ['@AnimeLain:user', JSON.stringify(user)],

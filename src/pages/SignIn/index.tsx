@@ -1,10 +1,11 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import Icon from 'react-native-vector-icons/Feather';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
 import { Alert, TextInput } from 'react-native';
+import { AxiosError } from 'axios';
 import * as Yup from 'yup';
 import getValidationErrors from '../../utils/getValidationErrors';
 import {
@@ -15,6 +16,7 @@ import {
   CreateAccountButton,
   CreateAccountButtonText,
   Logo,
+  Error,
 } from './styles';
 
 import logoImg from '../../assets/logo.png';
@@ -32,12 +34,15 @@ const SignIn: React.FC = () => {
   const passwordInputRef = useRef<TextInput>(null);
   const navigation = useNavigation();
 
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
   const { signIn } = useAuth();
 
   const handleSignIn = useCallback(
     async (data: SignInFormData) => {
       try {
         formRef.current?.setErrors({});
+        setErrorMessage(null);
 
         const schema = Yup.object().shape({
           email: Yup.string()
@@ -63,9 +68,14 @@ const SignIn: React.FC = () => {
           return;
         }
 
+        if (err.isAxiosError) {
+          setErrorMessage('E-mail/senha incorreto(a), sempai.');
+          return;
+        }
+
         Alert.alert(
-          'Erro na autenticação',
-          'Ocorreu um erro ao fazer login, cheque as credenciais.',
+          'Erro no cadastro',
+          'Ocorreu um erro ao fazer login, tente novamente mais tarde, sempai.',
         );
       }
     },
@@ -111,6 +121,7 @@ const SignIn: React.FC = () => {
           >
             Entrar
           </Button>
+          {errorMessage && <Error>{errorMessage}</Error>}
         </Form>
 
         <ForgotPassword style={{ marginBottom: 30 }}>

@@ -47,3 +47,11 @@ export const CreateAccountButtonText = styled.Text`
   font-family: 'Roboto-Regular';
   margin-left: 16px;
 `;
+
+export const Error = styled.Text`
+  color: #e87c03;
+  font-size: 13px;
+  margin: 5px 0px 8px;
+  padding-left: 5px;
+  align-self: center;
+`;

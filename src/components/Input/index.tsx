@@ -9,7 +9,7 @@ import React, {
 } from 'react';
 import { TextInputProps } from 'react-native';
 
-import { Container, TextInput, Icon } from './styles';
+import { Container, TextInput, Icon, Error } from './styles';
 
 interface InputProps extends TextInputProps {
   name: string;
@@ -69,26 +69,31 @@ const Input: React.ForwardRefRenderFunction<InputRef, InputProps> = (
   }, [registerField, fieldName]);
 
   return (
-    <Container isFocused={isFocused} isErrored={!!error}>
-      <Icon
-        name={icon}
-        size={20}
-        color={isFocused || isFilled ? '#03a9f5' : '#8c8c8c'}
-      />
+    <>
+      <Container isFocused={isFocused}>
+        {icon && (
+          <Icon
+            name={icon}
+            size={20}
+            color={isFocused || isFilled ? '#03a9f5' : '#8c8c8c'}
+          />
+        )}
 
-      <TextInput
-        ref={inputElementRef}
-        keyboardAppearance="dark"
-        placeholderTextColor="#8c8c8c"
-        defaultValue={defaultValue}
-        onFocus={handleInputFocus}
-        onBlur={handleInputBlur}
-        onChangeText={value => {
-          inputValueRef.current.value = value;
-        }}
-        {...rest}
-      />
-    </Container>
+        <TextInput
+          ref={inputElementRef}
+          keyboardAppearance="dark"
+          placeholderTextColor="#8c8c8c"
+          defaultValue={defaultValue}
+          onFocus={handleInputFocus}
+          onBlur={handleInputBlur}
+          onChangeText={value => {
+            inputValueRef.current.value = value;
+          }}
+          {...rest}
+        />
+      </Container>
+      {!!error && <Error>{error}</Error>}
+    </>
   );
 };
 

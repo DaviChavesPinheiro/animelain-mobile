@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
@@ -14,6 +14,7 @@ import {
   CreateAccountButtonText,
   Logo,
   Title,
+  Error,
 } from './styles';
 
 import logoImg from '../../assets/logo.png';
@@ -30,6 +31,8 @@ const SignUp: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const navigation = useNavigation();
 
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
   const emailInputRef = useRef<TextInput>(null);
   const passwordInputRef = useRef<TextInput>(null);
 
@@ -37,6 +40,7 @@ const SignUp: React.FC = () => {
     async (data: SignUpFormData) => {
       try {
         formRef.current?.setErrors({});
+        setErrorMessage(null);
 
         const schema = Yup.object().shape({
           name: Yup.string().required('Nome obrigatório'),
@@ -59,6 +63,11 @@ const SignUp: React.FC = () => {
 
           formRef.current?.setErrors(errors);
 
+          return;
+        }
+
+        if (err.isAxiosError) {
+          setErrorMessage('E-mail ou nome já estão em uso, escolha um outro.');
           return;
         }
 
@@ -121,6 +130,7 @@ const SignUp: React.FC = () => {
           >
             Cadastrar
           </Button>
+          {errorMessage && <Error>{errorMessage}</Error>}
         </Form>
       </ScrollView>
 
