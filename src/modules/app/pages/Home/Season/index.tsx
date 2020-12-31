@@ -1,15 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../../../../shared/services/api';
-import {
-  AnimeCard,
-  AnimeImage,
-  AnimeMetaContainer,
-  AnimeTitle,
-  Container,
-  HorizontalList,
-  ListContainer,
-  ListTitle,
-} from './styles';
+import { Container, HorizontalList, ListContainer, ListTitle } from './styles';
 
 export interface Anime {
   id: string;
@@ -17,7 +8,7 @@ export interface Anime {
   profile_url: string;
 }
 
-const Recomend: React.FC = () => {
+const Season: React.FC = () => {
   const [animes, setAnimes] = useState<Anime[]>([]);
 
   useEffect(() => {
@@ -33,14 +24,7 @@ const Recomend: React.FC = () => {
         <HorizontalList
           data={animes}
           keyExtractor={anime => anime.id}
-          renderItem={({ item: anime }) => (
-            <AnimeCard>
-              <AnimeImage source={{ uri: anime.profile_url }} />
-              <AnimeMetaContainer>
-                <AnimeTitle>{anime.title}</AnimeTitle>
-              </AnimeMetaContainer>
-            </AnimeCard>
-          )}
+          renderItem={({ item: anime }) => <ListTitle>{anime.title}</ListTitle>}
           horizontal
         />
       </ListContainer>
@@ -48,4 +32,4 @@ const Recomend: React.FC = () => {
   );
 };
 
-export default Recomend;
+export default Season;
