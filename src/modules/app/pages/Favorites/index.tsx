@@ -2,7 +2,7 @@ import React from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Container, Logo } from './styles';
 
-import logoImg from '../../assets/logo.png';
+import logoImg from '../../../../assets/logo.png';
 
 const Favorites: React.FC = () => {
   return (

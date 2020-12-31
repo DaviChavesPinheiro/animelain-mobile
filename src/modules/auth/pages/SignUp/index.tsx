@@ -1,63 +1,62 @@
 import React, { useCallback, useRef, useState } from 'react';
-import Icon from 'react-native-vector-icons/Feather';
 import { ScrollView } from 'react-native-gesture-handler';
+import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
 import { Alert, TextInput } from 'react-native';
 import * as Yup from 'yup';
-import getValidationErrors from '../../utils/getValidationErrors';
+import Button from '../../../../shared/components/Button';
+import Input from '../../../../shared/components/Input';
 import {
   Container,
-  Title,
-  ForgotPasswordText,
-  ForgotPassword,
   CreateAccountButton,
   CreateAccountButtonText,
   Logo,
+  Title,
   Error,
 } from './styles';
 
-import logoImg from '../../assets/logo.png';
-import Button from '../../components/Button';
-import Input from '../../components/Input';
-import { useAuth } from '../../hooks/auth';
+import logoImg from '../../../../assets/logo.png';
+import getValidationErrors from '../../../../shared/utils/getValidationErrors';
+import api from '../../../../shared/services/api';
 
-interface SignInFormData {
+interface SignUpFormData {
+  name: string;
   email: string;
   password: string;
 }
 
-const SignIn: React.FC = () => {
+const SignUp: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
-  const passwordInputRef = useRef<TextInput>(null);
   const navigation = useNavigation();
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const { signIn } = useAuth();
+  const emailInputRef = useRef<TextInput>(null);
+  const passwordInputRef = useRef<TextInput>(null);
 
-  const handleSignIn = useCallback(
-    async (data: SignInFormData) => {
+  const handleSignUp = useCallback(
+    async (data: SignUpFormData) => {
       try {
         formRef.current?.setErrors({});
         setErrorMessage(null);
 
         const schema = Yup.object().shape({
+          name: Yup.string().required('Nome obrigatório'),
           email: Yup.string()
             .email('Digite um e-mail válido')
             .required('E-mail obrigatório'),
-          password: Yup.string().required('Senha obrigatória'),
+          password: Yup.string().min(6, 'No mínimo 6 dígitos'),
         });
 
         await schema.validate(data, {
           abortEarly: false,
         });
 
-        await signIn({
-          email: data.email,
-          password: data.password,
-        });
+        await api.post('/users', data);
+
+        navigation.navigate('SignIn');
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
@@ -66,13 +65,11 @@ const SignIn: React.FC = () => {
 
           return;
         }
-
         if (err.isAxiosError) {
           switch (err.response.data.message) {
-            case 'Incorrect email/password combination.':
-              setErrorMessage('E-mail/senha incorreto(a), sempai.');
+            case 'Email address already taken':
+              setErrorMessage('Esse e-mail já está cadastrado, sempai.');
               break;
-
             default:
               break;
           }
@@ -81,24 +78,35 @@ const SignIn: React.FC = () => {
 
         Alert.alert(
           'Erro no cadastro',
-          'Ocorreu um erro ao fazer login, tente novamente mais tarde, sempai.',
+          'Ocorreu um erro ao fazer cadastro, tente novamente mais tarde, sempai.',
         );
       }
     },
-    [signIn],
+    [navigation],
   );
 
   return (
     <Container>
       <ScrollView style={{ marginBottom: 42 }}>
         <Logo source={logoImg} resizeMode="contain" />
-        <Title>Entrar</Title>
-
-        <Form ref={formRef} onSubmit={handleSignIn}>
+        <Title>Cadastro</Title>
+        <Form ref={formRef} onSubmit={handleSignUp}>
           <Input
+            autoCapitalize="words"
+            name="name"
+            icon="user"
+            placeholder="Nome"
+            returnKeyType="next"
+            onSubmitEditing={() => {
+              emailInputRef.current?.focus();
+            }}
+          />
+
+          <Input
+            ref={emailInputRef}
+            keyboardType="email-address"
             autoCorrect={false}
             autoCapitalize="none"
-            keyboardType="email-address"
             name="email"
             icon="mail"
             placeholder="E-mail"
@@ -122,25 +130,21 @@ const SignIn: React.FC = () => {
           />
 
           <Button
-            style={{ marginTop: 35 }}
+            style={{ marginTop: 35, marginBottom: 30 }}
             onPress={() => formRef.current?.submitForm()}
           >
-            Entrar
+            Cadastrar
           </Button>
           {errorMessage && <Error>{errorMessage}</Error>}
         </Form>
-
-        <ForgotPassword style={{ marginBottom: 30 }}>
-          <ForgotPasswordText>Esqueci minha senha</ForgotPasswordText>
-        </ForgotPassword>
       </ScrollView>
 
-      <CreateAccountButton onPress={() => navigation.navigate('SignUp')}>
-        <Icon name="log-in" size={20} color="#03a9f5" />
-        <CreateAccountButtonText>Criar uma conta</CreateAccountButtonText>
+      <CreateAccountButton onPress={() => navigation.navigate('SignIn')}>
+        <Icon name="arrow-left" size={20} color="#03a9f5" />
+        <CreateAccountButtonText>Ir para Login</CreateAccountButtonText>
       </CreateAccountButton>
     </Container>
   );
 };
 
-export default SignIn;
+export default SignUp;

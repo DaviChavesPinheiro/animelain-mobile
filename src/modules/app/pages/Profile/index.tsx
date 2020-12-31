@@ -1,6 +1,6 @@
 import React from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
-import { useAuth } from '../../hooks/auth';
+import { useAuth } from '../../../auth/hooks/auth';
 import { Avatar, Container, Header, HeaderIcon, HeaderTitle } from './styles';
 
 const Profile: React.FC = () => {

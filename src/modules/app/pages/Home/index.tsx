@@ -3,6 +3,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import { Container, Header, HeaderIcon, HeaderTitle } from './styles';
 
 import Favorites from '../Favorites';
+import Recomend from './Recomend';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -30,7 +31,7 @@ const Home: React.FC = () => {
           },
         }}
       >
-        <Tab.Screen name="RECOMENDADO" component={Favorites} />
+        <Tab.Screen name="RECOMENDADO" component={Recomend} />
         <Tab.Screen name="NOVOS" component={Favorites} />
         <Tab.Screen name="TEMPORADA" component={Favorites} />
       </Tab.Navigator>

@@ -3,9 +3,9 @@ import React from 'react';
 import { StatusBar, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 
-import AppProvider from './hooks';
+import AppProvider from './shared/hooks';
 
-import Routes from './routes';
+import Routes from './shared/routes';
 
 const App: React.FC = () => {
   return (
