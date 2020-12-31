@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import React, { useCallback, useEffect, useState } from 'react';
 import api from '../../../../../shared/services/api';
 import {
   AnimeCard,
@@ -19,12 +20,20 @@ export interface Anime {
 
 const Recomend: React.FC = () => {
   const [animes, setAnimes] = useState<Anime[]>([]);
+  const navigation = useNavigation();
 
   useEffect(() => {
     api.get('/animes').then(response => {
       setAnimes(response.data);
     });
   }, []);
+
+  const handleAnimeCardPress = useCallback(
+    (anime: Anime) => {
+      navigation.navigate('Anime', { anime });
+    },
+    [navigation],
+  );
 
   return (
     <Container>
@@ -34,7 +43,7 @@ const Recomend: React.FC = () => {
           data={animes}
           keyExtractor={anime => anime.id}
           renderItem={({ item: anime }) => (
-            <AnimeCard>
+            <AnimeCard onPress={() => handleAnimeCardPress(anime)}>
               <AnimeImage source={{ uri: anime.profile_url }} />
               <AnimeMetaContainer>
                 <AnimeTitle>{anime.title}</AnimeTitle>

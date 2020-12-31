@@ -16,7 +16,7 @@ export const ListTitle = styled.Text`
   font-size: 20px;
   color: white;
   font-family: 'Roboto-Medium';
-  margin-bottom: 6px;
+  margin-bottom: 10px;
 `;
 export const HorizontalList = styled(FlatList as new () => FlatList<Anime>)``;
 

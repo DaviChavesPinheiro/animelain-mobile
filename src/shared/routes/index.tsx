@@ -1,7 +1,7 @@
 import React from 'react';
 
 import AuthRoutes from '../../modules/auth/routes/auth.routes';
-import AppRoutes from '../../modules/app/routes/app.routes';
+import AppRoutes from './app.routes';
 
 import { useAuth } from '../../modules/auth/hooks/auth';
 import Loading from '../pages/Loading';
