@@ -1,4 +1,5 @@
 import React from 'react';
+import { Character } from '../../pages/Character';
 import {
   Author,
   BannerImage,
@@ -12,23 +13,15 @@ import {
 } from './styles';
 
 interface Props {
-  title: string;
-  subtitle: string;
-  profile_url?: string;
-  banner_url?: string;
+  character: Character;
 }
 
-const Main: React.FC<Props> = ({
-  title,
-  subtitle,
-  profile_url,
-  banner_url,
-}) => {
+const Main: React.FC<Props> = ({ character }) => {
   return (
     <Container>
-      <BannerImage source={{ uri: banner_url }} />
-      <ProfileImage source={{ uri: profile_url }} />
-      <Title>{title}</Title>
+      <BannerImage source={{ uri: character.banner_url }} />
+      <ProfileImage source={{ uri: character.profile_url }} />
+      <Title>{character.name}</Title>
       <Author>Por Naoki Urasawa</Author>
       <ButtonsContainer>
         <Button>

@@ -15,7 +15,7 @@ import {
 export interface Anime {
   id: string;
   title: string;
-  profile_url: string;
+  profile_url?: string;
 }
 
 const Recomend: React.FC = () => {

@@ -1,26 +1,16 @@
 import React from 'react';
+import { Anime } from '../../pages/Anime';
 import { GenreText, Container, Title, GenreButton } from './styles';
 
-interface Category {
-  id: string;
-  name: string;
-}
-
-interface Genre {
-  id: string;
-  score: number;
-  category: Category;
-}
-
 interface Props {
-  genres?: Genre[];
+  anime: Anime;
 }
 
-const Genres: React.FC<Props> = ({ genres }) => {
+const Genres: React.FC<Props> = ({ anime }) => {
   return (
     <Container>
       <Title>Gêneros</Title>
-      {genres?.map(genre => (
+      {anime.genres?.map(genre => (
         <GenreButton key={genre.id}>
           <GenreText>{genre.category.name}</GenreText>
         </GenreButton>

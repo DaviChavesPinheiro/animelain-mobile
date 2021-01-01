@@ -15,7 +15,7 @@ export const Title = styled.Text`
   width: 100%;
 `;
 
-export const Character = styled.TouchableOpacity`
+export const CharacterContainer = styled.TouchableOpacity`
   padding: 15px 0px;
   flex-direction: row;
   align-items: center;

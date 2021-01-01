@@ -8,15 +8,34 @@ import Genres from '../../components/Genres';
 import Main from '../../components/Main';
 import { BackButton, Container, Header, HeaderIcon } from './styles';
 
+export interface Character {
+  id: string;
+  name: string;
+  age: number;
+  profile_url?: string;
+  banner_url?: string;
+}
+
+export interface Category {
+  id: string;
+  name: string;
+}
+
+export interface Genre {
+  id: string;
+  score: number;
+  category: Category;
+}
+
 export interface Anime {
   id: string;
   title: string;
   episodesAmount: number;
+  description?: string;
+  genres?: Genre[];
+  characters?: Character[];
   profile_url?: string;
   banner_url?: string;
-  description?: string;
-  genres?: any;
-  characters?: any;
 }
 
 const Anime: React.FC = () => {
@@ -43,9 +62,9 @@ const Anime: React.FC = () => {
       </Header>
       <ScrollView>
         <Main anime={anime} />
-        <Description description={anime.description} />
-        <Genres genres={anime.genres} />
-        <Characters characters={anime.characters} />
+        <Description anime={anime} />
+        <Genres anime={anime} />
+        <Characters anime={anime} />
       </ScrollView>
     </Container>
   );

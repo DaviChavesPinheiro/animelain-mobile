@@ -9,8 +9,8 @@ import { BackButton, Container, Header, HeaderIcon } from './styles';
 export interface Character {
   id: string;
   name: string;
-  description?: string;
   age: number;
+  description?: string;
   profile_url?: string;
   banner_url?: string;
 }
@@ -24,9 +24,9 @@ const Character: React.FC = () => {
   >();
 
   useEffect(() => {
-    const { id } = route.params.character;
     setCharacter(route.params.character);
 
+    const { id } = route.params.character;
     api.get(`/characters/${id}`).then(response => {
       setCharacter(response.data);
     });
@@ -40,13 +40,8 @@ const Character: React.FC = () => {
         </BackButton>
       </Header>
       <ScrollView>
-        <Main
-          title={character.name}
-          subtitle={character.name}
-          profile_url={character.profile_url}
-          banner_url={character.banner_url}
-        />
-        <Description description={character.description} />
+        <Main character={character} />
+        <Description character={character} />
       </ScrollView>
     </Container>
   );

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Anime } from '../../pages/Anime';
 import {
   Author,
   BannerImage,
@@ -10,14 +11,6 @@ import {
   ProfileImage,
   Title,
 } from './styles';
-
-interface Anime {
-  id: string;
-  title: string;
-  episodesAmount: number;
-  profile_url?: string;
-  banner_url?: string;
-}
 
 interface Props {
   anime: Anime;

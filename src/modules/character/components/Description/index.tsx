@@ -1,15 +1,16 @@
 import React from 'react';
+import { Character } from '../../pages/Character';
 import { Description, Container, Title } from './styles';
 
 interface Props {
-  description?: string;
+  character: Character;
 }
 
-const DescriptionPage: React.FC<Props> = ({ description }) => {
+const DescriptionPage: React.FC<Props> = ({ character }) => {
   return (
     <Container>
       <Title>Descrição</Title>
-      <Description>{description || 'Sem descrição'}</Description>
+      <Description>{character.description || 'Sem descrição'}</Description>
     </Container>
   );
 };

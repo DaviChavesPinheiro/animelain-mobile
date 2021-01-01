@@ -1,7 +1,8 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useCallback } from 'react';
+import { Anime, Character } from '../../pages/Anime';
 import {
-  Character,
+  CharacterContainer,
   CharacterImage,
   CharacterMeta,
   CharacterName,
@@ -10,18 +11,11 @@ import {
   Title,
 } from './styles';
 
-interface Character {
-  id: string;
-  name: string;
-  profile_url: string;
-  age: number;
-}
-
 interface Props {
-  characters?: Character[];
+  anime: Anime;
 }
 
-const Characters: React.FC<Props> = ({ characters }) => {
+const Characters: React.FC<Props> = ({ anime }) => {
   const navigation = useNavigation();
 
   const handleCharacterPress = useCallback(
@@ -33,8 +27,8 @@ const Characters: React.FC<Props> = ({ characters }) => {
   return (
     <Container>
       <Title>Personagens</Title>
-      {characters?.map(character => (
-        <Character
+      {anime.characters?.map(character => (
+        <CharacterContainer
           key={character.id}
           activeOpacity={0.5}
           onPress={() => handleCharacterPress(character)}
@@ -44,7 +38,7 @@ const Characters: React.FC<Props> = ({ characters }) => {
             <CharacterName>{character.name}</CharacterName>
             <CharacterRole>Principal</CharacterRole>
           </CharacterMeta>
-        </Character>
+        </CharacterContainer>
       ))}
     </Container>
   );

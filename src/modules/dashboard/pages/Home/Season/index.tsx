@@ -5,7 +5,7 @@ import { Container, HorizontalList, ListContainer, ListTitle } from './styles';
 export interface Anime {
   id: string;
   title: string;
-  profile_url: string;
+  profile_url?: string;
 }
 
 const Season: React.FC = () => {

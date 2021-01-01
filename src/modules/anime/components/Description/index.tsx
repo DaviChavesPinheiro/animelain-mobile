@@ -1,15 +1,16 @@
 import React from 'react';
+import { Anime } from '../../pages/Anime';
 import { Description, Container, Title } from './styles';
 
 interface Props {
-  description?: string;
+  anime: Anime;
 }
 
-const DescriptionPage: React.FC<Props> = ({ description }) => {
+const DescriptionPage: React.FC<Props> = ({ anime }) => {
   return (
     <Container>
       <Title>Descrição</Title>
-      <Description>{description || 'Sem descrição'}</Description>
+      <Description>{anime.description || 'Sem descrição'}</Description>
     </Container>
   );
 };
