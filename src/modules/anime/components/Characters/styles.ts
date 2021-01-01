@@ -13,7 +13,6 @@ export const Title = styled.Text`
   font-size: 18px;
   font-family: 'Roboto-Medium';
   width: 100%;
-  margin-bottom: 10px;
 `;
 
 export const Character = styled.TouchableOpacity`

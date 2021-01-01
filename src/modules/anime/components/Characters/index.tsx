@@ -1,4 +1,5 @@
-import React from 'react';
+import { useNavigation } from '@react-navigation/native';
+import React, { useCallback } from 'react';
 import {
   Character,
   CharacterImage,
@@ -21,11 +22,23 @@ interface Props {
 }
 
 const Characters: React.FC<Props> = ({ characters }) => {
+  const navigation = useNavigation();
+
+  const handleCharacterPress = useCallback(
+    (character: Character) => {
+      navigation.navigate('Character', { character });
+    },
+    [navigation],
+  );
   return (
     <Container>
       <Title>Personagens</Title>
       {characters?.map(character => (
-        <Character key={character.id} activeOpacity={0.5}>
+        <Character
+          key={character.id}
+          activeOpacity={0.5}
+          onPress={() => handleCharacterPress(character)}
+        >
           <CharacterImage source={{ uri: character.profile_url }} />
           <CharacterMeta>
             <CharacterName>{character.name}</CharacterName>
