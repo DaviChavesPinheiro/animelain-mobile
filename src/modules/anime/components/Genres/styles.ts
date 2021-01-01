@@ -1,9 +1,10 @@
-import { RectButton } from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
 
 export const Container = styled.SafeAreaView`
   flex: 1;
   background-color: #1e1e1e;
+  margin-bottom: 20px;
+
   padding: 10px;
 
   flex-direction: row;

@@ -2,6 +2,7 @@ import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import api from '../../../../shared/services/api';
+import Characters from '../../components/Characters';
 import Description from '../../components/Description';
 import Genres from '../../components/Genres';
 import Main from '../../components/Main';
@@ -15,6 +16,7 @@ export interface Anime {
   banner_url?: string;
   description?: string;
   genres?: any;
+  characters?: any;
 }
 
 const Anime: React.FC = () => {
@@ -39,10 +41,11 @@ const Anime: React.FC = () => {
           <HeaderIcon name="arrow-left" />
         </BackButton>
       </Header>
-      <ScrollView style={{ backgroundColor: 'white' }}>
+      <ScrollView>
         <Main anime={anime} />
         <Description description={anime.description} />
         <Genres genres={anime.genres} />
+        <Characters characters={anime.characters} />
       </ScrollView>
     </Container>
   );
