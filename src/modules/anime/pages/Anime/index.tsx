@@ -1,22 +1,36 @@
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
+import api from '../../../../shared/services/api';
 import Description from '../../components/Description';
+import Genres from '../../components/Genres';
 import Main from '../../components/Main';
 import { BackButton, Container, Header, HeaderIcon } from './styles';
 
 export interface Anime {
   id: string;
   title: string;
+  episodesAmount: number;
   profile_url?: string;
   banner_url?: string;
+  description?: string;
+  genres?: any;
 }
 
 const Anime: React.FC = () => {
+  const [anime, setAnime] = useState<Anime>({} as Anime);
   const navigation = useNavigation();
 
   const route = useRoute<RouteProp<{ params: { anime: Anime } }, 'params'>>();
-  const { anime } = route.params;
+
+  useEffect(() => {
+    const { id } = route.params.anime;
+    setAnime(route.params.anime);
+
+    api.get(`/animes/${id}`).then(response => {
+      setAnime(response.data);
+    });
+  }, [route.params.anime]);
 
   return (
     <Container>
@@ -27,7 +41,8 @@ const Anime: React.FC = () => {
       </Header>
       <ScrollView style={{ backgroundColor: 'white' }}>
         <Main anime={anime} />
-        <Description description={anime.title} />
+        <Description description={anime.description} />
+        <Genres genres={anime.genres} />
       </ScrollView>
     </Container>
   );

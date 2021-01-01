@@ -14,6 +14,7 @@ import {
 interface Anime {
   id: string;
   title: string;
+  episodesAmount: number;
   profile_url?: string;
   banner_url?: string;
 }
@@ -36,7 +37,7 @@ const Main: React.FC<Props> = ({ anime }) => {
         </Button>
         <Button>
           <Icon name="list" />
-          <ButtonLabel>Capítulos</ButtonLabel>
+          <ButtonLabel>{`${anime.episodesAmount} Episódios`}</ButtonLabel>
         </Button>
         <Button>
           <Icon name="heart" />
