@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useCallback } from 'react';
+import api from '../../../../shared/services/api';
 import { Anime } from '../../pages/Anime';
 import {
   Author,
@@ -17,6 +18,10 @@ interface Props {
 }
 
 const Main: React.FC<Props> = ({ anime }) => {
+  const handleToogleFavorite = useCallback(() => {
+    api.post(`/favorites/animes/add/${anime.id}`);
+  }, [anime.id]);
+
   return (
     <Container>
       <BannerImage source={{ uri: anime.banner_url }} />
@@ -32,7 +37,7 @@ const Main: React.FC<Props> = ({ anime }) => {
           <Icon name="list" />
           <ButtonLabel>{`${anime.episodesAmount} Episódios`}</ButtonLabel>
         </Button>
-        <Button>
+        <Button onPress={handleToogleFavorite}>
           <Icon name="heart" />
           <ButtonLabel>Favoritar</ButtonLabel>
         </Button>
