@@ -1,14 +1,25 @@
 import React from 'react';
-import { Container, Header, HeaderIcon, HeaderTitle } from './styles';
+import { useNavigation } from '@react-navigation/native';
+import {
+  Container,
+  Header,
+  HeaderButton,
+  HeaderIcon,
+  HeaderTitle,
+} from './styles';
 
 import TabRoutes from '../../routes/home.routes';
 
 const Home: React.FC = () => {
+  const navigation = useNavigation();
+
   return (
     <Container>
       <Header>
         <HeaderTitle>Anime Lain</HeaderTitle>
-        <HeaderIcon name="search" size={20} />
+        <HeaderButton onPress={() => navigation.navigate('Search')}>
+          <HeaderIcon name="search" size={20} />
+        </HeaderButton>
       </Header>
       <TabRoutes />
     </Container>

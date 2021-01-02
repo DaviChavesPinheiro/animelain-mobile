@@ -14,13 +14,6 @@ export const Header = styled.View`
   align-items: center;
 `;
 
-export const HeaderTitle = styled.Text`
-  margin-right: auto;
-  color: #fff;
-  font-size: 24px;
-  font-family: 'Roboto-Medium';
-`;
-
 export const BackButton = styled.TouchableOpacity``;
 
 export const HeaderIcon = styled(FeatherIcons)`

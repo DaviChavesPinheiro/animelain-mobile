@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 import React, { useCallback, useRef, useState } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Feather';

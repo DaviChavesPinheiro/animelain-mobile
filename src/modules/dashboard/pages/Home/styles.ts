@@ -22,6 +22,8 @@ export const HeaderTitle = styled.Text`
   font-family: 'Roboto-Medium';
 `;
 
+export const HeaderButton = styled.TouchableOpacity``;
+
 export const HeaderIcon = styled(FeatherIcons)`
   color: #fff;
   font-size: 24px;
