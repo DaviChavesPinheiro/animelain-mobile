@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useAuth } from '../../../auth/hooks/auth';
@@ -18,6 +19,8 @@ import {
 
 const Profile: React.FC = () => {
   const { user } = useAuth();
+
+  const navigation = useNavigation();
 
   return (
     <Container>
@@ -42,7 +45,7 @@ const Profile: React.FC = () => {
             <StatText>Mangás Favoritos</StatText>
           </Stat>
         </StatsContainer>
-        <EditProfileButton>
+        <EditProfileButton onPress={() => navigation.navigate('EditProfile')}>
           <EditProfileButtonText>Editar perfil</EditProfileButtonText>
         </EditProfileButton>
       </ScrollView>
