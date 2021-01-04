@@ -4,6 +4,7 @@ import Feather from 'react-native-vector-icons/Feather';
 
 import Home from '../pages/Home';
 import Favorites from '../pages/Favorites';
+import Recents from '../pages/Recents';
 import Profile from '../pages/Profile';
 
 const Dashboard = createBottomTabNavigator();
@@ -51,7 +52,7 @@ const DashboardRoutes: React.FC = () => (
         ),
       }}
       name="RECENTES"
-      component={Favorites}
+      component={Recents}
     />
     <Dashboard.Screen
       options={{
