@@ -1,7 +1,9 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useEffect, useState } from 'react';
+import { useWindowDimensions } from 'react-native';
 import api from '../../../../shared/services/api';
 import {
+  AnimeAuthor,
   AnimeCard,
   AnimeImage,
   AnimeMetaContainer,
@@ -10,7 +12,7 @@ import {
   Header,
   HeaderIcon,
   HeaderTitle,
-  HorizontalList,
+  List,
   ListContainer,
 } from './styles';
 
@@ -28,6 +30,8 @@ export interface FavoriteUserAnime {
 }
 
 const Favorites: React.FC = () => {
+  const windowWidth = useWindowDimensions().width;
+
   const [favoriteUserAnime, setFavoriteUserAnime] = useState<
     FavoriteUserAnime[]
   >([]);
@@ -54,17 +58,22 @@ const Favorites: React.FC = () => {
         <HeaderIcon name="search" size={20} />
       </Header>
       <ListContainer>
-        <HorizontalList
-          numColumns={3}
+        <List
+          key={windowWidth}
+          numColumns={Math.floor(windowWidth / 120)}
           data={favoriteUserAnime}
           keyExtractor={favoriteAnime => favoriteAnime.id}
+          columnWrapperStyle={{ justifyContent: 'center' }}
           renderItem={({ item: favoriteAnime }) => (
             <AnimeCard
               onPress={() => handleAnimeCardPress(favoriteAnime.anime)}
             >
               <AnimeImage source={{ uri: favoriteAnime.anime.profile_url }} />
               <AnimeMetaContainer>
-                <AnimeTitle>{favoriteAnime.anime.title}</AnimeTitle>
+                <AnimeTitle numberOfLines={2}>
+                  {favoriteAnime.anime.title}
+                </AnimeTitle>
+                <AnimeAuthor numberOfLines={1}>Naoki Urasawa</AnimeAuthor>
               </AnimeMetaContainer>
             </AnimeCard>
           )}
