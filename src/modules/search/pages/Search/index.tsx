@@ -1,10 +1,10 @@
 /* eslint-disable no-unused-expressions */
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Text, TextInput } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { TextInput, useWindowDimensions } from 'react-native';
 import api from '../../../../shared/services/api';
 import {
+  AnimeAuthor,
   AnimeCard,
   AnimeImage,
   AnimeMetaContainer,
@@ -13,7 +13,7 @@ import {
   Container,
   Header,
   HeaderIcon,
-  HorizontalList,
+  List,
   ListContainer,
   SearchInput,
 } from './styles';
@@ -31,6 +31,7 @@ const Search: React.FC = () => {
   const [animes, setAnimes] = useState<Anime[]>([]);
 
   const navigation = useNavigation();
+  const windowWidth = useWindowDimensions().width;
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -77,15 +78,18 @@ const Search: React.FC = () => {
         />
       </Header>
       <ListContainer>
-        <HorizontalList
-          numColumns={3}
+        <List
+          key={windowWidth}
+          numColumns={Math.floor(windowWidth / 120)}
           data={animes}
           keyExtractor={anime => anime.id}
+          columnWrapperStyle={{ justifyContent: 'center' }}
           renderItem={({ item: anime }) => (
             <AnimeCard onPress={() => handleAnimeCardPress(anime)}>
               <AnimeImage source={{ uri: anime.profile_url }} />
               <AnimeMetaContainer>
-                <AnimeTitle>{anime.title}</AnimeTitle>
+                <AnimeTitle numberOfLines={2}>{anime.title}</AnimeTitle>
+                <AnimeAuthor numberOfLines={1}>Naoki Urasawa</AnimeAuthor>
               </AnimeMetaContainer>
             </AnimeCard>
           )}
