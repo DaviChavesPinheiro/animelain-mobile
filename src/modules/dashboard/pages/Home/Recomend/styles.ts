@@ -10,24 +10,27 @@ export const Container = styled.SafeAreaView`
 
 export const ListContainer = styled.View`
   margin-top: 18px;
-  margin-left: 18px;
 `;
 export const ListTitle = styled.Text`
   font-size: 20px;
   color: white;
   font-family: 'Roboto-Medium';
   margin-bottom: 10px;
+  margin-left: 12px;
 `;
-export const HorizontalList = styled(FlatList as new () => FlatList<Anime>)``;
+export const HorizontalList = styled(FlatList as new () => FlatList<Anime>)`
+  padding-left: 12px;
+`;
 
 export const AnimeCard = styled(RectButton)`
   background-color: #1e1e1e;
   border-radius: 3px;
-  width: 120px;
-  height: 230px;
+  width: 100px;
+  height: 200px;
   overflow: hidden;
 
   margin-right: 10px;
+  margin-bottom: 10px;
 `;
 
 export const AnimeImage = styled.Image`
@@ -39,11 +42,19 @@ export const AnimeImage = styled.Image`
 
 export const AnimeMetaContainer = styled.View`
   height: 30%;
-  padding: 10px;
+  padding: 8px;
 `;
 
 export const AnimeTitle = styled.Text`
   font-size: 14px;
+  line-height: 15px;
   color: white;
+  font-family: 'Roboto-Regular';
+  height: 30px;
+`;
+
+export const AnimeAuthor = styled.Text`
+  font-size: 13px;
+  color: #aaa;
   font-family: 'Roboto-Regular';
 `;

@@ -18,7 +18,7 @@ const Home: React.FC = () => {
       <Header>
         <HeaderTitle>Anime Lain</HeaderTitle>
         <HeaderButton onPress={() => navigation.navigate('Search')}>
-          <HeaderIcon name="search" size={20} />
+          <HeaderIcon name="search" />
         </HeaderButton>
       </Header>
       <TabRoutes />

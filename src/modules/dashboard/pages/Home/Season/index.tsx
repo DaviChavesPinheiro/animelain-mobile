@@ -1,6 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useWindowDimensions } from 'react-native';
 import api from '../../../../../shared/services/api';
-import { Container, HorizontalList, ListContainer, ListTitle } from './styles';
+import {
+  AnimeAuthor,
+  AnimeCard,
+  AnimeImage,
+  AnimeMetaContainer,
+  AnimeTitle,
+  Container,
+  List,
+  ListContainer,
+} from './styles';
 
 export interface Anime {
   id: string;
@@ -10,22 +21,41 @@ export interface Anime {
 
 const Season: React.FC = () => {
   const [animes, setAnimes] = useState<Anime[]>([]);
+  const windowWidth = useWindowDimensions().width;
+
+  const navigation = useNavigation();
 
   useEffect(() => {
-    api.get('/animes').then(response => {
+    api.get('/animes/season').then(response => {
       setAnimes(response.data);
     });
   }, []);
 
+  const handleAnimeCardPress = useCallback(
+    (anime: Anime) => {
+      navigation.navigate('Anime', { anime });
+    },
+    [navigation],
+  );
+
   return (
     <Container>
       <ListContainer>
-        <ListTitle>Seinen</ListTitle>
-        <HorizontalList
+        <List
+          key={windowWidth}
+          numColumns={Math.floor(windowWidth / 120)}
           data={animes}
           keyExtractor={anime => anime.id}
-          renderItem={({ item: anime }) => <ListTitle>{anime.title}</ListTitle>}
-          horizontal
+          columnWrapperStyle={{ justifyContent: 'center' }}
+          renderItem={({ item: anime }) => (
+            <AnimeCard onPress={() => handleAnimeCardPress(anime)}>
+              <AnimeImage source={{ uri: anime.profile_url }} />
+              <AnimeMetaContainer>
+                <AnimeTitle numberOfLines={2}>{anime.title}</AnimeTitle>
+                <AnimeAuthor numberOfLines={1}>Naoki Urasawa</AnimeAuthor>
+              </AnimeMetaContainer>
+            </AnimeCard>
+          )}
         />
       </ListContainer>
     </Container>

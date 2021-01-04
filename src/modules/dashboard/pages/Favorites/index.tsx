@@ -10,6 +10,7 @@ import {
   AnimeTitle,
   Container,
   Header,
+  HeaderButton,
   HeaderIcon,
   HeaderTitle,
   List,
@@ -55,7 +56,9 @@ const Favorites: React.FC = () => {
     <Container>
       <Header>
         <HeaderTitle>Favoritos</HeaderTitle>
-        <HeaderIcon name="search" size={20} />
+        <HeaderButton onPress={() => navigation.navigate('Search')}>
+          <HeaderIcon name="search" />
+        </HeaderButton>
       </Header>
       <ListContainer>
         <List
