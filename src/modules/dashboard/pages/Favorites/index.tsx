@@ -14,25 +14,29 @@ import {
   ListContainer,
 } from './styles';
 
-export interface Anime {
+interface Anime {
   id: string;
   title: string;
+  apisodesAmount: number;
   profile_url?: string;
+  banner_url?: string;
 }
 
-interface User {
+export interface FavoriteUserAnime {
   id: string;
-  favorite_animes: Anime[];
+  anime: Anime;
 }
 
 const Favorites: React.FC = () => {
-  const [user, setUser] = useState<User | null>(null);
+  const [favoriteUserAnime, setFavoriteUserAnime] = useState<
+    FavoriteUserAnime[]
+  >([]);
 
   const navigation = useNavigation();
 
   useEffect(() => {
-    api.get('/profile').then(response => {
-      setUser(response.data);
+    api.get('/favorites/animes').then(response => {
+      setFavoriteUserAnime(response.data);
     });
   }, []);
 
@@ -52,13 +56,15 @@ const Favorites: React.FC = () => {
       <ListContainer>
         <HorizontalList
           numColumns={3}
-          data={user?.favorite_animes}
-          keyExtractor={anime => anime.id}
-          renderItem={({ item: anime }) => (
-            <AnimeCard onPress={() => handleAnimeCardPress(anime)}>
-              <AnimeImage source={{ uri: anime.profile_url }} />
+          data={favoriteUserAnime}
+          keyExtractor={favoriteAnime => favoriteAnime.id}
+          renderItem={({ item: favoriteAnime }) => (
+            <AnimeCard
+              onPress={() => handleAnimeCardPress(favoriteAnime.anime)}
+            >
+              <AnimeImage source={{ uri: favoriteAnime.anime.profile_url }} />
               <AnimeMetaContainer>
-                <AnimeTitle>{anime.title}</AnimeTitle>
+                <AnimeTitle>{favoriteAnime.anime.title}</AnimeTitle>
               </AnimeMetaContainer>
             </AnimeCard>
           )}

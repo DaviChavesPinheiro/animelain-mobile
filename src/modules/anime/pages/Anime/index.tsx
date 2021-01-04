@@ -16,6 +16,12 @@ export interface Character {
   banner_url?: string;
 }
 
+export interface Animes_characters {
+  id: string;
+  role?: string;
+  character: Character;
+}
+
 export interface Category {
   id: string;
   name: string;
@@ -33,9 +39,10 @@ export interface Anime {
   episodesAmount: number;
   description?: string;
   genres?: Genre[];
-  characters?: Character[];
+  animes_characters?: Animes_characters[];
   profile_url?: string;
   banner_url?: string;
+  isFavorited?: boolean;
 }
 
 const Anime: React.FC = () => {
@@ -61,7 +68,7 @@ const Anime: React.FC = () => {
         </BackButton>
       </Header>
       <ScrollView>
-        <Main anime={anime} />
+        <Main anime={anime} setAnime={setAnime} />
         <Description anime={anime} />
         <Genres anime={anime} />
         <Characters anime={anime} />

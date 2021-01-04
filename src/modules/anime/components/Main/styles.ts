@@ -1,5 +1,6 @@
 import styled from 'styled-components/native';
-import FeatherIcons from 'react-native-vector-icons/Feather';
+import Feather from 'react-native-vector-icons/Feather';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export const Container = styled.SafeAreaView`
   flex: 1;
@@ -51,8 +52,12 @@ export const Button = styled.TouchableOpacity`
   align-items: center;
 `;
 
-export const Icon = styled(FeatherIcons)`
+export const FeatherIcons = styled(Feather)`
   color: #03a9f5;
+  font-size: 25px;
+`;
+
+export const IoniconsIcons = styled(Ionicons)`
   font-size: 25px;
 `;
 

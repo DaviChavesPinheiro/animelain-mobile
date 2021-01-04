@@ -27,16 +27,16 @@ const Characters: React.FC<Props> = ({ anime }) => {
   return (
     <Container>
       <Title>Personagens</Title>
-      {anime.characters?.map(character => (
+      {anime.animes_characters?.map(({ id, role, character }) => (
         <CharacterContainer
-          key={character.id}
+          key={id}
           activeOpacity={0.5}
           onPress={() => handleCharacterPress(character)}
         >
           <CharacterImage source={{ uri: character.profile_url }} />
           <CharacterMeta>
             <CharacterName>{character.name}</CharacterName>
-            <CharacterRole>Principal</CharacterRole>
+            {role && <CharacterRole>{role}</CharacterRole>}
           </CharacterMeta>
         </CharacterContainer>
       ))}

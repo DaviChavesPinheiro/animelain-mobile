@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 import FeatherIcons from 'react-native-vector-icons/Feather';
 import { FlatList } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
-import { Anime } from '.';
+import { FavoriteUserAnime } from '.';
 
 export const Container = styled.SafeAreaView`
   flex: 1;
@@ -35,7 +35,9 @@ export const ListContainer = styled.View`
   margin-left: 18px;
 `;
 
-export const HorizontalList = styled(FlatList as new () => FlatList<Anime>)``;
+export const HorizontalList = styled(
+  FlatList as new () => FlatList<FavoriteUserAnime>,
+)``;
 
 export const AnimeCard = styled(RectButton)`
   background-color: #1e1e1e;

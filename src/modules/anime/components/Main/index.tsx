@@ -8,19 +8,30 @@ import {
   ButtonLabel,
   ButtonsContainer,
   Container,
-  Icon,
+  FeatherIcons,
   ProfileImage,
+  IoniconsIcons,
   Title,
 } from './styles';
 
 interface Props {
   anime: Anime;
+  setAnime(anime: Anime): void;
 }
 
-const Main: React.FC<Props> = ({ anime }) => {
-  const handleToogleFavorite = useCallback(() => {
-    api.post(`/favorites/animes/add/${anime.id}`);
-  }, [anime.id]);
+const Main: React.FC<Props> = ({ anime, setAnime }) => {
+  const handleToogleFavorite = useCallback(async () => {
+    if (anime.isFavorited) {
+      await api.delete(`/favorites/animes/${anime.id}`);
+    } else {
+      await api.post(`/favorites/animes/${anime.id}`);
+    }
+
+    setAnime({
+      ...anime,
+      isFavorited: !anime.isFavorited,
+    });
+  }, [anime, setAnime]);
 
   return (
     <Container>
@@ -30,15 +41,18 @@ const Main: React.FC<Props> = ({ anime }) => {
       <Author>Por Naoki Urasawa</Author>
       <ButtonsContainer>
         <Button>
-          <Icon name="play" />
+          <FeatherIcons name="play" />
           <ButtonLabel>Assistir</ButtonLabel>
         </Button>
         <Button>
-          <Icon name="list" />
+          <FeatherIcons name="list" />
           <ButtonLabel>{`${anime.episodesAmount} Episódios`}</ButtonLabel>
         </Button>
         <Button onPress={handleToogleFavorite}>
-          <Icon name="heart" />
+          <IoniconsIcons
+            name={anime.isFavorited ? 'heart' : 'heart-outline'}
+            color={anime.isFavorited ? '#f50303' : '#03a9f5'}
+          />
           <ButtonLabel>Favoritar</ButtonLabel>
         </Button>
       </ButtonsContainer>
