@@ -1,7 +1,20 @@
 import React from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useAuth } from '../../../auth/hooks/auth';
-import { Avatar, Container, Header, HeaderIcon, HeaderTitle } from './styles';
+import {
+  Avatar,
+  Container,
+  EditProfileButton,
+  EditProfileButtonText,
+  Header,
+  HeaderIcon,
+  HeaderTitle,
+  Stat,
+  StatNumber,
+  StatsContainer,
+  StatText,
+  UserName,
+} from './styles';
 
 const Profile: React.FC = () => {
   const { user } = useAuth();
@@ -14,6 +27,24 @@ const Profile: React.FC = () => {
       </Header>
       <ScrollView>
         <Avatar source={{ uri: user.avatar_url }} />
+        <UserName>{user.name}</UserName>
+        <StatsContainer>
+          <Stat>
+            <StatNumber>10</StatNumber>
+            <StatText>Animes Favoritos</StatText>
+          </Stat>
+          <Stat>
+            <StatNumber>16</StatNumber>
+            <StatText>Personages Favoritos</StatText>
+          </Stat>
+          <Stat>
+            <StatNumber>130</StatNumber>
+            <StatText>Mangás Favoritos</StatText>
+          </Stat>
+        </StatsContainer>
+        <EditProfileButton>
+          <EditProfileButtonText>Editar perfil</EditProfileButtonText>
+        </EditProfileButton>
       </ScrollView>
     </Container>
   );
