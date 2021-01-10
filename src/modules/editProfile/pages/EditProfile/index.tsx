@@ -78,8 +78,8 @@ const EditProfile: React.FC = () => {
         }
 
         Alert.alert(
-          'Erro no cadastro',
-          'Ocorreu um erro ao fazer cadastro, tente novamente mais tarde, sempai.',
+          'Erro no envio',
+          'Ocorreu um erro ao fazer o envio, tente novamente mais tarde, sempai.',
         );
       } finally {
         setSaving(false);

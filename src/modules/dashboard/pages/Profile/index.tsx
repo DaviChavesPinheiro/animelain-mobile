@@ -18,7 +18,7 @@ import {
 } from './styles';
 
 const Profile: React.FC = () => {
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
 
   const navigation = useNavigation();
 
@@ -26,7 +26,7 @@ const Profile: React.FC = () => {
     <Container>
       <Header>
         <HeaderTitle>Perfil</HeaderTitle>
-        <HeaderIcon name="bell" size={20} />
+        <HeaderIcon onPress={signOut} name="bell" size={20} />
       </Header>
       <ScrollView>
         <Avatar source={{ uri: user.avatar_url }} />

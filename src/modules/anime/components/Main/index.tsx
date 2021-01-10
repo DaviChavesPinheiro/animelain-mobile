@@ -53,7 +53,9 @@ const Main: React.FC<Props> = ({ anime, setAnime }) => {
             name={anime.isFavorited ? 'heart' : 'heart-outline'}
             color={anime.isFavorited ? '#f50303' : '#03a9f5'}
           />
-          <ButtonLabel>Favoritar</ButtonLabel>
+          <ButtonLabel>
+            {anime.isFavorited ? 'Favoritado' : 'Favoritar'}
+          </ButtonLabel>
         </Button>
       </ButtonsContainer>
     </Container>
