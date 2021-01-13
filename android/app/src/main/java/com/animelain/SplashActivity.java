@@ -1,4 +1,4 @@
-package com.mobile;
+package com.animelain;
 
 import android.content.Intent;
 import android.os.Bundle;
