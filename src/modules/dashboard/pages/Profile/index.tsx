@@ -2,6 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useAuth } from '../../../auth/hooks/auth';
+import avatarPlaceholder from '../../../../assets/avatar.png';
 import {
   Avatar,
   Container,
@@ -29,7 +30,11 @@ const Profile: React.FC = () => {
         <HeaderIcon onPress={signOut} name="bell" size={20} />
       </Header>
       <ScrollView>
-        <Avatar source={{ uri: user.avatar_url }} />
+        <Avatar
+          source={
+            user.avatar_url ? { uri: user.avatar_url } : avatarPlaceholder
+          }
+        />
         <UserName>{user.name}</UserName>
         <StatsContainer>
           <Stat>

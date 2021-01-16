@@ -1,15 +1,15 @@
 import 'react-native-gesture-handler';
 import React, { useEffect } from 'react';
 import { StatusBar, View } from 'react-native';
+import changeNavigationBarColor from 'react-native-navigation-bar-color';
 import { NavigationContainer } from '@react-navigation/native';
-
 import SplashScreen from 'react-native-splash-screen';
-import AppProvider from './shared/hooks';
-
 import Routes from './shared/routes';
+import AppProvider from './shared/hooks';
 
 const App: React.FC = () => {
   useEffect(() => {
+    changeNavigationBarColor('#1e1e1e', false, false);
     SplashScreen.hide();
   }, []);
 

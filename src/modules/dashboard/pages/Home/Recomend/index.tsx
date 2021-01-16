@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -21,13 +22,39 @@ export interface Anime {
 }
 
 const Recomend: React.FC = () => {
-  const [animes, setAnimes] = useState<Anime[]>([]);
+  const [seinenAnimes, setSeinenAnimes] = useState<Anime[]>([]);
+  const [adventureAnimes, setAdventureAnimes] = useState<Anime[]>([]);
+  const [shounenAnimes, setShounenAnimes] = useState<Anime[]>([]);
   const navigation = useNavigation();
 
   useEffect(() => {
-    api.get('/animes').then(response => {
-      setAnimes(response.data);
-    });
+    api
+      .get('/animes', {
+        params: {
+          categories: ['947ca3be-3b25-443e-bb7e-d2ea648ae4d8'],
+        },
+      })
+      .then(response => {
+        setSeinenAnimes(response.data);
+        api
+          .get('/animes', {
+            params: {
+              categories: ['f5fc96e2-a3c2-41ab-aefc-64856687dd71'],
+            },
+          })
+          .then(response => {
+            setAdventureAnimes(response.data);
+            api
+              .get('/animes', {
+                params: {
+                  categories: ['acf1e1f7-01d5-41c0-b8c7-52db5cbba814'],
+                },
+              })
+              .then(response => {
+                setShounenAnimes(response.data);
+              });
+          });
+      });
   }, []);
 
   const handleAnimeCardPress = useCallback(
@@ -43,7 +70,7 @@ const Recomend: React.FC = () => {
         <ListContainer>
           <ListTitle>Seinen</ListTitle>
           <HorizontalList
-            data={animes}
+            data={seinenAnimes}
             keyExtractor={anime => anime.id}
             renderItem={({ item: anime }) => (
               <AnimeCard onPress={() => handleAnimeCardPress(anime)}>
@@ -58,9 +85,9 @@ const Recomend: React.FC = () => {
           />
         </ListContainer>
         <ListContainer>
-          <ListTitle>Ação</ListTitle>
+          <ListTitle>Adventure</ListTitle>
           <HorizontalList
-            data={animes}
+            data={adventureAnimes}
             keyExtractor={anime => anime.id}
             renderItem={({ item: anime }) => (
               <AnimeCard onPress={() => handleAnimeCardPress(anime)}>
@@ -75,26 +102,9 @@ const Recomend: React.FC = () => {
           />
         </ListContainer>
         <ListContainer>
-          <ListTitle>Shounen</ListTitle>
+          <ListTitle>Comedy</ListTitle>
           <HorizontalList
-            data={animes}
-            keyExtractor={anime => anime.id}
-            renderItem={({ item: anime }) => (
-              <AnimeCard onPress={() => handleAnimeCardPress(anime)}>
-                <AnimeImage source={{ uri: anime.profile_url }} />
-                <AnimeMetaContainer>
-                  <AnimeTitle numberOfLines={2}>{anime.title}</AnimeTitle>
-                  <AnimeAuthor numberOfLines={1}>Naoki Urasawa</AnimeAuthor>
-                </AnimeMetaContainer>
-              </AnimeCard>
-            )}
-            horizontal
-          />
-        </ListContainer>
-        <ListContainer>
-          <ListTitle>Ecchi</ListTitle>
-          <HorizontalList
-            data={animes}
+            data={shounenAnimes}
             keyExtractor={anime => anime.id}
             renderItem={({ item: anime }) => (
               <AnimeCard onPress={() => handleAnimeCardPress(anime)}>

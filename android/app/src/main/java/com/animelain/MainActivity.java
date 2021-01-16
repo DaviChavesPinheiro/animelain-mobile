@@ -4,7 +4,6 @@ import com.facebook.react.ReactActivity;
 import org.devio.rn.splashscreen.SplashScreen;
 import android.os.Bundle;
 
-
 public class MainActivity extends ReactActivity {
 
   @Override
@@ -12,8 +11,9 @@ public class MainActivity extends ReactActivity {
       SplashScreen.show(this);
       super.onCreate(savedInstanceState);
   }
+
   @Override
   protected String getMainComponentName() {
-    return "mobile";
+    return "animelain";
   }
 }
