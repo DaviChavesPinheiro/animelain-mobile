@@ -1,13 +1,14 @@
+import { gql, useQuery } from '@apollo/client';
 import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useWindowDimensions } from 'react-native';
-import api from '../../../../shared/services/api';
+import { useAuth } from '../../../auth/hooks/auth';
 import {
-  AnimeAuthor,
-  AnimeCard,
-  AnimeImage,
-  AnimeMetaContainer,
-  AnimeTitle,
+  MediaAuthor,
+  MediaCard,
+  MediaImage,
+  MediaMetaContainer,
+  MediaTitle,
   Container,
   Header,
   HeaderButton,
@@ -17,41 +18,57 @@ import {
   ListContainer,
 } from './styles';
 
-interface Anime {
+interface Media {
   id: string;
   title: string;
-  apisodesAmount: number;
-  profile_url?: string;
-  banner_url?: string;
+  type: string;
+  authors?: string;
+  coverImageUrl?: string;
 }
 
-export interface FavoriteUserAnime {
+export interface UserMedia {
   id: string;
-  anime: Anime;
+  node: Media;
 }
+
+const LIST_USER_MEDIAS = gql`
+  query UserMedias($id: String!) {
+    user(id: $id) {
+      userMedias(input: { userMediaStatus: FAVORITE, page: 1, perPage: 50 }) {
+        edges {
+          id
+          node {
+            id
+            type
+            title
+            authors
+            coverImageUrl
+          }
+        }
+      }
+    }
+  }
+`;
 
 const Favorites: React.FC = () => {
+  const { user } = useAuth();
+  const { data, loading } = useQuery(LIST_USER_MEDIAS, {
+    variables: {
+      id: user.id,
+    },
+  });
   const windowWidth = useWindowDimensions().width;
-
-  const [favoriteUserAnime, setFavoriteUserAnime] = useState<
-    FavoriteUserAnime[]
-  >([]);
 
   const navigation = useNavigation();
 
-  useEffect(() => {
-    api.get('/favorites/animes').then(response => {
-      setFavoriteUserAnime(response.data);
-    });
-  }, []);
-
-  const handleAnimeCardPress = useCallback(
-    (anime: Anime) => {
-      navigation.navigate('Anime', { anime });
+  const handleMediaCardPress = useCallback(
+    (media: Media) => {
+      navigation.navigate('Anime', { media });
     },
     [navigation],
   );
 
+  if (loading) return null;
   return (
     <Container>
       <Header>
@@ -64,21 +81,21 @@ const Favorites: React.FC = () => {
         <List
           key={windowWidth}
           numColumns={Math.floor(windowWidth / 120)}
-          data={favoriteUserAnime}
-          keyExtractor={favoriteAnime => favoriteAnime.id}
+          data={data.user.userMedias.edges}
+          keyExtractor={userMedia => userMedia.id}
           columnWrapperStyle={{ justifyContent: 'center' }}
-          renderItem={({ item: favoriteAnime }) => (
-            <AnimeCard
-              onPress={() => handleAnimeCardPress(favoriteAnime.anime)}
-            >
-              <AnimeImage source={{ uri: favoriteAnime.anime.profile_url }} />
-              <AnimeMetaContainer>
-                <AnimeTitle numberOfLines={2}>
-                  {favoriteAnime.anime.title}
-                </AnimeTitle>
-                <AnimeAuthor numberOfLines={1}>Naoki Urasawa</AnimeAuthor>
-              </AnimeMetaContainer>
-            </AnimeCard>
+          renderItem={({ item: userMedia }) => (
+            <MediaCard onPress={() => handleMediaCardPress(userMedia.node)}>
+              <MediaImage source={{ uri: userMedia.node.coverImageUrl }} />
+              <MediaMetaContainer>
+                <MediaTitle numberOfLines={2}>
+                  {userMedia.node.title}
+                </MediaTitle>
+                <MediaAuthor numberOfLines={1}>
+                  {userMedia.node.authors || 'Desconhecido'}
+                </MediaAuthor>
+              </MediaMetaContainer>
+            </MediaCard>
           )}
         />
       </ListContainer>

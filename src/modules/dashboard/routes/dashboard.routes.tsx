@@ -36,7 +36,7 @@ const DashboardRoutes: React.FC = () => (
       name="INÍCIO"
       component={Home}
     />
-    {/* <Dashboard.Screen
+    <Dashboard.Screen
       options={{
         tabBarIcon: ({ color }) => (
           <Feather name="heart" color={color} size={23} />
@@ -45,7 +45,7 @@ const DashboardRoutes: React.FC = () => (
       name="FAVORITOS"
       component={Favorites}
     />
-    <Dashboard.Screen
+    {/* <Dashboard.Screen
       options={{
         tabBarIcon: ({ color }) => (
           <Feather name="clock" color={color} size={23} />
