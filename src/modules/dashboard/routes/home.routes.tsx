@@ -25,8 +25,8 @@ const TabRoutes: React.FC = () => (
     }}
   >
     <Tab.Screen name="ALL" component={All} />
+    <Tab.Screen name="SEASON" component={Season} />
     {/* <Tab.Screen name="RECOMENDADO" component={Recomend} /> */}
-    {/* <Tab.Screen name="TEMPORADA" component={Season} /> */}
   </Tab.Navigator>
 );
 

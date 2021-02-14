@@ -47,7 +47,6 @@ const All: React.FC = () => {
   );
 
   if (loading) return null;
-
   return (
     <Container>
       <ListContainer>
@@ -63,7 +62,7 @@ const All: React.FC = () => {
               <AnimeMetaContainer>
                 <AnimeTitle numberOfLines={2}>{anime.title}</AnimeTitle>
                 <AnimeAuthor numberOfLines={1}>
-                  {anime.authors || ''}
+                  {anime.authors || 'Desconhecido'}
                 </AnimeAuthor>
               </AnimeMetaContainer>
             </AnimeCard>

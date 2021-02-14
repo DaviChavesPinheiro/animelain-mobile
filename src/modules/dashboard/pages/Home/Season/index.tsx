@@ -1,7 +1,7 @@
+import { gql, useQuery } from '@apollo/client';
 import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useWindowDimensions } from 'react-native';
-import api from '../../../../../shared/services/api';
 import {
   AnimeAuthor,
   AnimeCard,
@@ -16,20 +16,28 @@ import {
 export interface Anime {
   id: string;
   title: string;
-  profile_url?: string;
+  authors?: string;
+  coverImageUrl?: string;
 }
 
+const LIST_MEDIAS = gql`
+  query {
+    page(input: { page: 1, perPage: 50 }) {
+      medias(input: { type: ANIME, season: SUMMER }) {
+        id
+        title
+        authors
+        coverImageUrl
+      }
+    }
+  }
+`;
+
 const Season: React.FC = () => {
-  const [animes, setAnimes] = useState<Anime[]>([]);
+  const { data, loading } = useQuery(LIST_MEDIAS);
   const windowWidth = useWindowDimensions().width;
 
   const navigation = useNavigation();
-
-  useEffect(() => {
-    api.get('/animes/season').then(response => {
-      setAnimes(response.data);
-    });
-  }, []);
 
   const handleAnimeCardPress = useCallback(
     (anime: Anime) => {
@@ -38,21 +46,24 @@ const Season: React.FC = () => {
     [navigation],
   );
 
+  if (loading) return null;
   return (
     <Container>
       <ListContainer>
         <List
           key={windowWidth}
           numColumns={Math.floor(windowWidth / 120)}
-          data={animes}
+          data={data.page.medias}
           keyExtractor={anime => anime.id}
           columnWrapperStyle={{ justifyContent: 'center' }}
           renderItem={({ item: anime }) => (
             <AnimeCard onPress={() => handleAnimeCardPress(anime)}>
-              <AnimeImage source={{ uri: anime.profile_url }} />
+              <AnimeImage source={{ uri: anime.coverImageUrl }} />
               <AnimeMetaContainer>
                 <AnimeTitle numberOfLines={2}>{anime.title}</AnimeTitle>
-                <AnimeAuthor numberOfLines={1}>Naoki Urasawa</AnimeAuthor>
+                <AnimeAuthor numberOfLines={1}>
+                  {anime.authors || 'Desconhecido'}
+                </AnimeAuthor>
               </AnimeMetaContainer>
             </AnimeCard>
           )}
