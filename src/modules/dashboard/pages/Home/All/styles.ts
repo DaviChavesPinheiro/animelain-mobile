@@ -1,7 +1,7 @@
 import { FlatList } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
-import { Anime } from './index';
+import { Media } from './index';
 
 export const Container = styled.SafeAreaView`
   flex: 1;
@@ -12,9 +12,9 @@ export const ListContainer = styled.View`
   margin: 10px;
 `;
 
-export const List = styled(FlatList as new () => FlatList<Anime>)``;
+export const List = styled(FlatList as new () => FlatList<Media>)``;
 
-export const AnimeCard = styled(RectButton)`
+export const MediaCard = styled(RectButton)`
   background-color: #1e1e1e;
   border-radius: 3px;
   width: 100px;
@@ -26,19 +26,19 @@ export const AnimeCard = styled(RectButton)`
   margin-bottom: 10px;
 `;
 
-export const AnimeImage = styled.Image`
+export const MediaImage = styled.Image`
   width: 100%;
   height: 70%;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
 `;
 
-export const AnimeMetaContainer = styled.View`
+export const MediaMetaContainer = styled.View`
   height: 30%;
   padding: 8px;
 `;
 
-export const AnimeTitle = styled.Text`
+export const MediaTitle = styled.Text`
   font-size: 14px;
   line-height: 15px;
   color: white;
@@ -46,7 +46,7 @@ export const AnimeTitle = styled.Text`
   height: 30px;
 `;
 
-export const AnimeAuthor = styled.Text`
+export const MediaAuthor = styled.Text`
   font-size: 13px;
   color: #aaa;
   font-family: 'Roboto-Regular';

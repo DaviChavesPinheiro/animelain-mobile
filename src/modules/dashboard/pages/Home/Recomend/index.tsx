@@ -3,36 +3,36 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import api from '../../../../../shared/services/api';
 import {
-  AnimeAuthor,
-  AnimeCard,
-  AnimeImage,
-  AnimeMetaContainer,
-  AnimeTitle,
+  MediaAuthor,
+  MediaCard,
+  MediaImage,
+  MediaMetaContainer,
+  MediaTitle,
   Container,
   HorizontalList,
   ListContainer,
   ListTitle,
 } from './styles';
 
-export interface Anime {
+export interface Media {
   id: string;
   title: string;
   profile_url?: string;
 }
 
 const Recomend: React.FC = () => {
-  const [animes, setAnimes] = useState<Anime[]>([]);
+  const [medias, setMedias] = useState<Media[]>([]);
   const navigation = useNavigation();
 
   useEffect(() => {
-    api.get('/animes').then(response => {
-      setAnimes(response.data);
+    api.get('/medias').then(response => {
+      setMedias(response.data);
     });
   }, []);
 
-  const handleAnimeCardPress = useCallback(
-    (anime: Anime) => {
-      navigation.navigate('Anime', { anime });
+  const handleMediaCardPress = useCallback(
+    (media: Media) => {
+      navigation.navigate('Media', { media });
     },
     [navigation],
   );
@@ -43,16 +43,16 @@ const Recomend: React.FC = () => {
         <ListContainer>
           <ListTitle>Seinen</ListTitle>
           <HorizontalList
-            data={animes}
-            keyExtractor={anime => anime.id}
-            renderItem={({ item: anime }) => (
-              <AnimeCard onPress={() => handleAnimeCardPress(anime)}>
-                <AnimeImage source={{ uri: anime.profile_url }} />
-                <AnimeMetaContainer>
-                  <AnimeTitle numberOfLines={2}>{anime.title}</AnimeTitle>
-                  <AnimeAuthor numberOfLines={1}>Naoki Urasawa</AnimeAuthor>
-                </AnimeMetaContainer>
-              </AnimeCard>
+            data={medias}
+            keyExtractor={media => media.id}
+            renderItem={({ item: media }) => (
+              <MediaCard onPress={() => handleMediaCardPress(media)}>
+                <MediaImage source={{ uri: media.profile_url }} />
+                <MediaMetaContainer>
+                  <MediaTitle numberOfLines={2}>{media.title}</MediaTitle>
+                  <MediaAuthor numberOfLines={1}>Naoki Urasawa</MediaAuthor>
+                </MediaMetaContainer>
+              </MediaCard>
             )}
             horizontal
           />
@@ -60,16 +60,16 @@ const Recomend: React.FC = () => {
         <ListContainer>
           <ListTitle>Ação</ListTitle>
           <HorizontalList
-            data={animes}
-            keyExtractor={anime => anime.id}
-            renderItem={({ item: anime }) => (
-              <AnimeCard onPress={() => handleAnimeCardPress(anime)}>
-                <AnimeImage source={{ uri: anime.profile_url }} />
-                <AnimeMetaContainer>
-                  <AnimeTitle numberOfLines={2}>{anime.title}</AnimeTitle>
-                  <AnimeAuthor numberOfLines={1}>Naoki Urasawa</AnimeAuthor>
-                </AnimeMetaContainer>
-              </AnimeCard>
+            data={medias}
+            keyExtractor={media => media.id}
+            renderItem={({ item: media }) => (
+              <MediaCard onPress={() => handleMediaCardPress(media)}>
+                <MediaImage source={{ uri: media.profile_url }} />
+                <MediaMetaContainer>
+                  <MediaTitle numberOfLines={2}>{media.title}</MediaTitle>
+                  <MediaAuthor numberOfLines={1}>Naoki Urasawa</MediaAuthor>
+                </MediaMetaContainer>
+              </MediaCard>
             )}
             horizontal
           />
@@ -77,16 +77,16 @@ const Recomend: React.FC = () => {
         <ListContainer>
           <ListTitle>Shounen</ListTitle>
           <HorizontalList
-            data={animes}
-            keyExtractor={anime => anime.id}
-            renderItem={({ item: anime }) => (
-              <AnimeCard onPress={() => handleAnimeCardPress(anime)}>
-                <AnimeImage source={{ uri: anime.profile_url }} />
-                <AnimeMetaContainer>
-                  <AnimeTitle numberOfLines={2}>{anime.title}</AnimeTitle>
-                  <AnimeAuthor numberOfLines={1}>Naoki Urasawa</AnimeAuthor>
-                </AnimeMetaContainer>
-              </AnimeCard>
+            data={medias}
+            keyExtractor={media => media.id}
+            renderItem={({ item: media }) => (
+              <MediaCard onPress={() => handleMediaCardPress(media)}>
+                <MediaImage source={{ uri: media.profile_url }} />
+                <MediaMetaContainer>
+                  <MediaTitle numberOfLines={2}>{media.title}</MediaTitle>
+                  <MediaAuthor numberOfLines={1}>Naoki Urasawa</MediaAuthor>
+                </MediaMetaContainer>
+              </MediaCard>
             )}
             horizontal
           />
@@ -94,16 +94,16 @@ const Recomend: React.FC = () => {
         <ListContainer>
           <ListTitle>Ecchi</ListTitle>
           <HorizontalList
-            data={animes}
-            keyExtractor={anime => anime.id}
-            renderItem={({ item: anime }) => (
-              <AnimeCard onPress={() => handleAnimeCardPress(anime)}>
-                <AnimeImage source={{ uri: anime.profile_url }} />
-                <AnimeMetaContainer>
-                  <AnimeTitle numberOfLines={2}>{anime.title}</AnimeTitle>
-                  <AnimeAuthor numberOfLines={1}>Naoki Urasawa</AnimeAuthor>
-                </AnimeMetaContainer>
-              </AnimeCard>
+            data={medias}
+            keyExtractor={media => media.id}
+            renderItem={({ item: media }) => (
+              <MediaCard onPress={() => handleMediaCardPress(media)}>
+                <MediaImage source={{ uri: media.profile_url }} />
+                <MediaMetaContainer>
+                  <MediaTitle numberOfLines={2}>{media.title}</MediaTitle>
+                  <MediaAuthor numberOfLines={1}>Naoki Urasawa</MediaAuthor>
+                </MediaMetaContainer>
+              </MediaCard>
             )}
             horizontal
           />

@@ -3,17 +3,17 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useWindowDimensions } from 'react-native';
 import {
-  AnimeAuthor,
-  AnimeCard,
-  AnimeImage,
-  AnimeMetaContainer,
-  AnimeTitle,
+  MediaAuthor,
+  MediaCard,
+  MediaImage,
+  MediaMetaContainer,
+  MediaTitle,
   Container,
   List,
   ListContainer,
 } from './styles';
 
-export interface Anime {
+export interface Media {
   id: string;
   title: string;
   authors?: string;
@@ -39,9 +39,9 @@ const Season: React.FC = () => {
 
   const navigation = useNavigation();
 
-  const handleAnimeCardPress = useCallback(
-    (anime: Anime) => {
-      navigation.navigate('Anime', { anime });
+  const handleMediaCardPress = useCallback(
+    (media: Media) => {
+      navigation.navigate('Media', { media });
     },
     [navigation],
   );
@@ -54,18 +54,18 @@ const Season: React.FC = () => {
           key={windowWidth}
           numColumns={Math.floor(windowWidth / 120)}
           data={data.page.medias}
-          keyExtractor={anime => anime.id}
+          keyExtractor={media => media.id}
           columnWrapperStyle={{ justifyContent: 'center' }}
-          renderItem={({ item: anime }) => (
-            <AnimeCard onPress={() => handleAnimeCardPress(anime)}>
-              <AnimeImage source={{ uri: anime.coverImageUrl }} />
-              <AnimeMetaContainer>
-                <AnimeTitle numberOfLines={2}>{anime.title}</AnimeTitle>
-                <AnimeAuthor numberOfLines={1}>
-                  {anime.authors || 'Desconhecido'}
-                </AnimeAuthor>
-              </AnimeMetaContainer>
-            </AnimeCard>
+          renderItem={({ item: media }) => (
+            <MediaCard onPress={() => handleMediaCardPress(media)}>
+              <MediaImage source={{ uri: media.coverImageUrl }} />
+              <MediaMetaContainer>
+                <MediaTitle numberOfLines={2}>{media.title}</MediaTitle>
+                <MediaAuthor numberOfLines={1}>
+                  {media.authors || 'Desconhecido'}
+                </MediaAuthor>
+              </MediaMetaContainer>
+            </MediaCard>
           )}
         />
       </ListContainer>

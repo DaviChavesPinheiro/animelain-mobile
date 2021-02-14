@@ -34,7 +34,7 @@ const Profile: React.FC = () => {
         <StatsContainer>
           <Stat>
             <StatNumber>10</StatNumber>
-            <StatText>Animes Favoritos</StatText>
+            <StatText>Medias Favoritos</StatText>
           </Stat>
           <Stat>
             <StatNumber>16</StatNumber>

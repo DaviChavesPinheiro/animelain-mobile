@@ -63,7 +63,7 @@ const Recents: React.FC = () => {
 
   const handleMediaCardPress = useCallback(
     (media: Media) => {
-      navigation.navigate('Anime', { media });
+      navigation.navigate('Media', { media });
     },
     [navigation],
   );
