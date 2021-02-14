@@ -8,14 +8,19 @@ import React, {
 
 import AsyncStorage from '@react-native-community/async-storage';
 
-import api from '../../../shared/services/api';
+import { createHttpLink, gql } from '@apollo/client';
+import client from '../../../shared/services/client';
 
 interface User {
   id: string;
   name: string;
-  email: string;
-  avatar_url: string;
-  isAdmin: boolean;
+  email?: string;
+  avatar: {
+    id: string;
+    url: string;
+    width: number;
+    height: number;
+  };
 }
 
 interface AuthState {
@@ -50,7 +55,14 @@ export const AuthProvider: React.FC = ({ children }) => {
       ]);
 
       if (token[1] && user[1]) {
-        api.defaults.headers.authorization = `Bearer ${token[1]}`;
+        const link = createHttpLink({
+          uri: 'http://192.168.0.49:3333/graphql',
+          headers: {
+            authorization: token ? `Bearer ${token[1]}` : '',
+          },
+        });
+
+        client.setLink(link);
 
         setData({ token: token[1], user: JSON.parse(user[1]) });
       }
@@ -62,19 +74,43 @@ export const AuthProvider: React.FC = ({ children }) => {
   }, []);
 
   const signIn = useCallback(async ({ email, password }: SignInCredentials) => {
-    const response = await api.post<AuthState>('/sessions', {
-      email,
-      password,
+    const response = await client.mutate({
+      mutation: gql`
+        mutation {
+          createSession(
+            input: { email: "${email}", password: "${password}" }
+          ) {
+            user {
+              id
+              name
+              avatar {
+                id
+                url
+                width
+                height
+              }
+            }
+            token
+          }
+        }
+      `,
     });
 
-    const { token, user } = response.data;
+    const { token, user } = response.data.createSession;
 
     await AsyncStorage.multiSet([
       ['@AnimeLain:token', token],
       ['@AnimeLain:user', JSON.stringify(user)],
     ]);
 
-    api.defaults.headers.authorization = `Bearer ${token}`;
+    const link = createHttpLink({
+      uri: 'http://192.168.0.49:3333/graphql',
+      headers: {
+        authorization: token ? `Bearer ${token}` : '',
+      },
+    });
+
+    client.setLink(link);
 
     setData({ token, user });
   }, []);

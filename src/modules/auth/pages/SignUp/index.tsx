@@ -7,6 +7,7 @@ import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
 import { Alert, TextInput } from 'react-native';
 import * as Yup from 'yup';
+import { gql, useMutation } from '@apollo/client';
 import Button from '../../../../shared/components/Button';
 import Input from '../../../../shared/components/Input';
 import {
@@ -20,7 +21,6 @@ import {
 
 import logoImg from '../../../../assets/logo.png';
 import getValidationErrors from '../../../../shared/utils/getValidationErrors';
-import api from '../../../../shared/services/api';
 
 interface SignUpFormData {
   name: string;
@@ -28,9 +28,18 @@ interface SignUpFormData {
   password: string;
 }
 
+const CREATE_USER = gql`
+  mutation CreateUser($name: String!, $email: String!, $password: String!) {
+    createUser(input: { name: $name, email: $email, password: $password }) {
+      id
+    }
+  }
+`;
+
 const SignUp: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const navigation = useNavigation();
+  const [createUser, { data }] = useMutation(CREATE_USER);
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -38,7 +47,7 @@ const SignUp: React.FC = () => {
   const passwordInputRef = useRef<TextInput>(null);
 
   const handleSignUp = useCallback(
-    async (data: SignUpFormData) => {
+    async (formData: SignUpFormData) => {
       try {
         formRef.current?.setErrors({});
         setErrorMessage(null);
@@ -51,11 +60,11 @@ const SignUp: React.FC = () => {
           password: Yup.string().min(6, 'No mínimo 6 dígitos'),
         });
 
-        await schema.validate(data, {
+        await schema.validate(formData, {
           abortEarly: false,
         });
 
-        await api.post('/users', data);
+        await createUser({ variables: formData });
 
         navigation.navigate('SignIn');
       } catch (err) {
@@ -67,7 +76,7 @@ const SignUp: React.FC = () => {
           return;
         }
         if (err.isAxiosError) {
-          switch (err.response.data.message) {
+          switch (err.response.formData.message) {
             case 'Email address already taken':
               setErrorMessage('Esse e-mail já está cadastrado, sempai.');
               break;
@@ -77,13 +86,16 @@ const SignUp: React.FC = () => {
           return;
         }
 
+        // eslint-disable-next-line no-console
+        console.log(err);
+
         Alert.alert(
           'Erro no cadastro',
           'Ocorreu um erro ao fazer cadastro, tente novamente mais tarde, sempai.',
         );
       }
     },
-    [navigation],
+    [createUser, navigation],
   );
 
   return (

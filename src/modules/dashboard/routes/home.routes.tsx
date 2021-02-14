@@ -1,7 +1,7 @@
 import React from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import Recomend from '../pages/Home/Recomend';
-import News from '../pages/Home/News';
+import All from '../pages/Home/All';
 import Season from '../pages/Home/Season';
 
 const Tab = createMaterialTopTabNavigator();
@@ -24,9 +24,9 @@ const TabRoutes: React.FC = () => (
       },
     }}
   >
-    <Tab.Screen name="RECOMENDADO" component={Recomend} />
-    <Tab.Screen name="NOVOS" component={News} />
-    <Tab.Screen name="TEMPORADA" component={Season} />
+    <Tab.Screen name="ALL" component={All} />
+    {/* <Tab.Screen name="RECOMENDADO" component={Recomend} /> */}
+    {/* <Tab.Screen name="TEMPORADA" component={Season} /> */}
   </Tab.Navigator>
 );
 

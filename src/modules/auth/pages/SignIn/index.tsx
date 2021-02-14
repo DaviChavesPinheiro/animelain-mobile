@@ -39,7 +39,7 @@ const SignIn: React.FC = () => {
   const { signIn } = useAuth();
 
   const handleSignIn = useCallback(
-    async (data: SignInFormData) => {
+    async (formData: SignInFormData) => {
       try {
         formRef.current?.setErrors({});
         setErrorMessage(null);
@@ -51,13 +51,13 @@ const SignIn: React.FC = () => {
           password: Yup.string().required('Senha obrigatória'),
         });
 
-        await schema.validate(data, {
+        await schema.validate(formData, {
           abortEarly: false,
         });
 
         await signIn({
-          email: data.email,
-          password: data.password,
+          email: formData.email,
+          password: formData.password,
         });
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
@@ -69,7 +69,7 @@ const SignIn: React.FC = () => {
         }
 
         if (err.isAxiosError) {
-          switch (err.response.data.message) {
+          switch (err.response.formData.message) {
             case 'Incorrect email/password combination.':
               setErrorMessage('E-mail/senha incorreto(a), sempai.');
               break;
@@ -79,7 +79,8 @@ const SignIn: React.FC = () => {
           }
           return;
         }
-
+        // eslint-disable-next-line no-console
+        console.log(err);
         Alert.alert(
           'Erro no cadastro',
           'Ocorreu um erro ao fazer login, tente novamente mais tarde, sempai.',
