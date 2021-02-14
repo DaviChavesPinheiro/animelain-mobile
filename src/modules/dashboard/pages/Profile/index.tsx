@@ -29,7 +29,7 @@ const Profile: React.FC = () => {
         <HeaderIcon onPress={signOut} name="bell" size={20} />
       </Header>
       <ScrollView>
-        <Avatar source={{ uri: user.avatar_url }} />
+        <Avatar source={{ uri: user.avatar?.url }} />
         <UserName>{user.name}</UserName>
         <StatsContainer>
           <Stat>

@@ -53,7 +53,7 @@ const DashboardRoutes: React.FC = () => (
       }}
       name="RECENTES"
       component={Recents}
-    />
+    /> */}
     <Dashboard.Screen
       options={{
         tabBarIcon: ({ color }) => (
@@ -62,7 +62,7 @@ const DashboardRoutes: React.FC = () => (
       }}
       name="PERFIL"
       component={Profile}
-    /> */}
+    />
   </Dashboard.Navigator>
 );
 
