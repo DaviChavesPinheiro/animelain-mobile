@@ -1,0 +1,61 @@
+import { gql, useQuery } from '@apollo/client';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+import { ScrollView } from 'react-native-gesture-handler';
+import Description from '../../components/Description';
+import Main from '../../components/Main';
+
+import { BackButton, Container, Header, HeaderIcon } from './styles';
+
+export interface Character {
+  id: string;
+  name: string;
+  age?: number;
+  description?: string;
+  coverImageUrl?: string;
+  bannerImageUrl?: string;
+}
+
+const LIST_CHARACTER = gql`
+  query ListCharacter($id: String!) {
+    character(id: $id) {
+      id
+      name
+      age
+      description
+      coverImageUrl
+      bannerImageUrl
+    }
+  }
+`;
+
+const Character: React.FC = () => {
+  const route = useRoute<
+    RouteProp<{ params: { character: Character } }, 'params'>
+  >();
+  const { data, loading } = useQuery(LIST_CHARACTER, {
+    variables: {
+      id: route.params.character.id,
+    },
+  });
+  const navigation = useNavigation();
+
+  if (loading) return null;
+  return (
+    <Container>
+      <Header>
+        <BackButton onPress={() => navigation.goBack()}>
+          <HeaderIcon name="arrow-left" />
+        </BackButton>
+      </Header>
+
+      <ScrollView>
+        <Main character={data.character} />
+
+        <Description character={data.character} />
+      </ScrollView>
+    </Container>
+  );
+};
+
+export default Character;
