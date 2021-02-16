@@ -85,7 +85,7 @@ const Search: React.FC = () => {
         </BackButton>
 
         <SearchInput
-          // ref={inputRef}
+          ref={inputRef}
           autoCorrect={false}
           placeholder="Pesquise um anime, manga..."
           returnKeyType="search"

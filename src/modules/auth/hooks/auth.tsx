@@ -14,7 +14,7 @@ import client from '../../../shared/services/client';
 interface User {
   id: string;
   name: string;
-  email?: string;
+  email: string;
   avatar?: {
     id: string;
     url: string;
@@ -83,6 +83,7 @@ export const AuthProvider: React.FC = ({ children }) => {
             user {
               id
               name
+              email
               avatar {
                 id
                 url
