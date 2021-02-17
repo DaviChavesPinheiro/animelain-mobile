@@ -34,7 +34,14 @@ export interface UserMedia {
 const LIST_USER_MEDIAS = gql`
   query UserMedias($id: String!) {
     user(id: $id) {
-      userMedias(input: { userMediaStatus: CURRENT, page: 1, perPage: 50 }) {
+      userMedias(
+        input: {
+          userMediaStatus: CURRENT
+          mediaType: ANIME
+          page: 1
+          perPage: 50
+        }
+      ) {
         edges {
           id
           node {
