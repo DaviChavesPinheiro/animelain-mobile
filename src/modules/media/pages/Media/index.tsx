@@ -38,6 +38,7 @@ export interface Media {
   episodesAmount?: number;
   authors?: string;
   description?: string;
+  isFavorited?: boolean;
   coverImageUrl?: string;
   bannerImageUrl?: string;
   categories: {
@@ -56,6 +57,7 @@ const LIST_MEDIA = gql`
       title
       authors
       description
+      isFavorited
       coverImageUrl
       bannerImageUrl
       categories(input: { page: 1, perPage: 50 }) {
@@ -85,7 +87,7 @@ const LIST_MEDIA = gql`
 
 const Media: React.FC = () => {
   const route = useRoute<RouteProp<{ params: { media: Media } }, 'params'>>();
-  const { data, loading } = useQuery(LIST_MEDIA, {
+  const { data, loading, refetch } = useQuery(LIST_MEDIA, {
     variables: {
       id: route.params.media.id,
     },
@@ -101,7 +103,7 @@ const Media: React.FC = () => {
         </BackButton>
       </Header>
       <ScrollView>
-        <Main media={data.media} />
+        <Main media={data.media} refetchMedia={refetch} />
         <Description media={data.media} />
         <Categories media={data.media} />
         <Characters media={data.media} />

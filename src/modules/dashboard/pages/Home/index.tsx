@@ -17,7 +17,7 @@ const Home: React.FC = () => {
   return (
     <Container>
       <Header>
-        <HeaderTitle>Media Lain</HeaderTitle>
+        <HeaderTitle>Anime Lain</HeaderTitle>
         <HeaderButton onPress={() => navigation.navigate('Search')}>
           <HeaderIcon name="search" />
         </HeaderButton>

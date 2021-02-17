@@ -1,4 +1,6 @@
+import { gql, useMutation } from '@apollo/client';
 import React, { useCallback } from 'react';
+import { useAuth } from '../../../auth/hooks/auth';
 
 import { Media } from '../../pages/Media';
 
@@ -17,16 +19,60 @@ import {
 
 interface Props {
   media: Media;
+  refetchMedia(): Promise<any>;
 }
 
-const Main: React.FC<Props> = ({ media }) => {
+const CREATE_USER_MEDIA = gql`
+  mutation CreateUserMedia($userId: String!, $mediaId: String!) {
+    createUserMedia(
+      input: { userId: $userId, mediaId: $mediaId, userMediaStatus: FAVORITE }
+    ) {
+      id
+    }
+  }
+`;
+const DELETE_USER_MEDIA = gql`
+  mutation DeleteUserMedia($userId: String!, $mediaId: String!) {
+    deleteUserMedia(
+      input: { userId: $userId, mediaId: $mediaId, userMediaStatus: FAVORITE }
+    ) {
+      id
+    }
+  }
+`;
+
+const Main: React.FC<Props> = ({ media, refetchMedia }) => {
+  const { user } = useAuth();
+
+  const [createUserMedia] = useMutation(CREATE_USER_MEDIA);
+  const [deleteUserMedia] = useMutation(DELETE_USER_MEDIA);
+
   const handleToogleFavorite = useCallback(async () => {
-    // if (media.isFavorited) {
-    //   await api.delete(`/favorites/medias/${media.id}`);
-    // } else {
-    //   await api.post(`/favorites/medias/${media.id}`);
-    // }
-  }, []);
+    if (media.isFavorited) {
+      await deleteUserMedia({
+        variables: {
+          userId: user.id,
+          mediaId: media.id,
+        },
+      });
+      await refetchMedia();
+    } else {
+      await createUserMedia({
+        variables: {
+          userId: user.id,
+          mediaId: media.id,
+        },
+      });
+      await refetchMedia();
+    }
+  }, [
+    createUserMedia,
+    deleteUserMedia,
+    media.id,
+    media.isFavorited,
+    refetchMedia,
+    user.id,
+  ]);
 
   return (
     <Container>
@@ -53,11 +99,13 @@ const Main: React.FC<Props> = ({ media }) => {
 
         <Button onPress={handleToogleFavorite}>
           <IoniconsIcons
-            name={false ? 'heart' : 'heart-outline'}
-            color={false ? '#f50303' : '#03a9f5'}
+            name={media.isFavorited ? 'heart' : 'heart-outline'}
+            color={media.isFavorited ? '#f50303' : '#03a9f5'}
           />
 
-          <ButtonLabel>{false ? 'Favoritado' : 'Favoritar'}</ButtonLabel>
+          <ButtonLabel>
+            {media.isFavorited ? 'Favoritado' : 'Favoritar'}
+          </ButtonLabel>
         </Button>
       </ButtonsContainer>
     </Container>
