@@ -13,6 +13,7 @@ export interface Character {
   age?: number;
   description?: string;
   isFavorited?: boolean;
+  isFollowed?: boolean;
   coverImageUrl?: string;
   bannerImageUrl?: string;
 }
@@ -25,6 +26,7 @@ const LIST_CHARACTER = gql`
       age
       description
       isFavorited
+      isFollowed
       coverImageUrl
       bannerImageUrl
     }

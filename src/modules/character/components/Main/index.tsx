@@ -23,12 +23,16 @@ interface Props {
 }
 
 const CREATE_USER_CHARACTER = gql`
-  mutation CreateUserCharacter($userId: String!, $characterId: String!) {
+  mutation CreateUserCharacter(
+    $userId: String!
+    $characterId: String!
+    $userCharacterStatus: UserCharacterStatus!
+  ) {
     createUserCharacter(
       input: {
         userId: $userId
         characterId: $characterId
-        userCharacterStatus: FAVORITE
+        userCharacterStatus: $userCharacterStatus
       }
     ) {
       id
@@ -36,12 +40,16 @@ const CREATE_USER_CHARACTER = gql`
   }
 `;
 const DELETE_USER_CHARACTER = gql`
-  mutation DeleteUserCharacter($userId: String!, $characterId: String!) {
+  mutation DeleteUserCharacter(
+    $userId: String!
+    $characterId: String!
+    $userCharacterStatus: UserCharacterStatus!
+  ) {
     deleteUserCharacter(
       input: {
         userId: $userId
         characterId: $characterId
-        userCharacterStatus: FAVORITE
+        userCharacterStatus: $userCharacterStatus
       }
     ) {
       id
@@ -61,23 +69,52 @@ const Main: React.FC<Props> = ({ character, refetchCharacter }) => {
         variables: {
           userId: user.id,
           characterId: character.id,
+          userCharacterStatus: 'FAVORITE',
         },
       });
-      await refetchCharacter();
     } else {
       await createUserCharacter({
         variables: {
           userId: user.id,
           characterId: character.id,
+          userCharacterStatus: 'FAVORITE',
         },
       });
-      await refetchCharacter();
     }
+    await refetchCharacter();
   }, [
     createUserCharacter,
     deleteUserCharacter,
     character.id,
     character.isFavorited,
+    refetchCharacter,
+    user.id,
+  ]);
+
+  const handleToogleFollow = useCallback(async () => {
+    if (character.isFollowed) {
+      await deleteUserCharacter({
+        variables: {
+          userId: user.id,
+          characterId: character.id,
+          userCharacterStatus: 'FOLLOW',
+        },
+      });
+    } else {
+      await createUserCharacter({
+        variables: {
+          userId: user.id,
+          characterId: character.id,
+          userCharacterStatus: 'FOLLOW',
+        },
+      });
+    }
+    await refetchCharacter();
+  }, [
+    createUserCharacter,
+    deleteUserCharacter,
+    character.id,
+    character.isFollowed,
     refetchCharacter,
     user.id,
   ]);
@@ -99,10 +136,12 @@ const Main: React.FC<Props> = ({ character, refetchCharacter }) => {
           <ButtonLabel>Assistir</ButtonLabel>
         </Button>
 
-        <Button>
-          <FeatherIcons name="bell" />
+        <Button onPress={handleToogleFollow}>
+          <FeatherIcons name={character.isFollowed ? 'bell' : 'bell-off'} />
 
-          <ButtonLabel>Seguir</ButtonLabel>
+          <ButtonLabel>
+            {character.isFollowed ? 'Seguindo' : 'Seguir'}
+          </ButtonLabel>
         </Button>
 
         <Button onPress={handleToogleFavorite}>
