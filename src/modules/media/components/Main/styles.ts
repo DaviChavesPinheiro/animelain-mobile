@@ -1,5 +1,7 @@
 import styled from 'styled-components/native';
+
 import Feather from 'react-native-vector-icons/Feather';
+
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export const Container = styled.SafeAreaView`
@@ -27,7 +29,6 @@ export const Title = styled.Text`
   font-size: 26px;
   font-family: 'Roboto-Medium';
   align-self: center;
-
   margin-top: 16px;
 `;
 

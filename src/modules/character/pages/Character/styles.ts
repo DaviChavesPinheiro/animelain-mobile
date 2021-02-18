@@ -1,4 +1,5 @@
 import styled from 'styled-components/native';
+
 import FeatherIcons from 'react-native-vector-icons/Feather';
 
 export const Container = styled.SafeAreaView`
@@ -10,7 +11,6 @@ export const Header = styled.View`
   background-color: #1e1e1e;
   flex-direction: row;
   padding: 8px 16px;
-
   align-items: center;
 `;
 

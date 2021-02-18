@@ -12,6 +12,7 @@ export interface Character {
   name: string;
   age?: number;
   description?: string;
+  isFavorited?: boolean;
   coverImageUrl?: string;
   bannerImageUrl?: string;
 }
@@ -23,6 +24,7 @@ const LIST_CHARACTER = gql`
       name
       age
       description
+      isFavorited
       coverImageUrl
       bannerImageUrl
     }
@@ -33,7 +35,7 @@ const Character: React.FC = () => {
   const route = useRoute<
     RouteProp<{ params: { character: Character } }, 'params'>
   >();
-  const { data, loading } = useQuery(LIST_CHARACTER, {
+  const { data, loading, refetch } = useQuery(LIST_CHARACTER, {
     variables: {
       id: route.params.character.id,
     },
@@ -50,7 +52,7 @@ const Character: React.FC = () => {
       </Header>
 
       <ScrollView>
-        <Main character={data.character} />
+        <Main character={data.character} refetchCharacter={refetch} />
 
         <Description character={data.character} />
       </ScrollView>

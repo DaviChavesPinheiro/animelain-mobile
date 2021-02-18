@@ -1,4 +1,6 @@
-import React from 'react';
+import { gql, useMutation } from '@apollo/client';
+import React, { useCallback } from 'react';
+import { useAuth } from '../../../auth/hooks/auth';
 
 import { Character } from '../../pages/Character';
 
@@ -9,16 +11,77 @@ import {
   ButtonLabel,
   ButtonsContainer,
   Container,
-  Icon,
+  FeatherIcons,
+  IoniconsIcons,
   ProfileImage,
   Title,
 } from './styles';
 
 interface Props {
   character: Character;
+  refetchCharacter(): Promise<any>;
 }
 
-const Main: React.FC<Props> = ({ character }) => {
+const CREATE_USER_CHARACTER = gql`
+  mutation CreateUserCharacter($userId: String!, $characterId: String!) {
+    createUserCharacter(
+      input: {
+        userId: $userId
+        characterId: $characterId
+        userCharacterStatus: FAVORITE
+      }
+    ) {
+      id
+    }
+  }
+`;
+const DELETE_USER_CHARACTER = gql`
+  mutation DeleteUserCharacter($userId: String!, $characterId: String!) {
+    deleteUserCharacter(
+      input: {
+        userId: $userId
+        characterId: $characterId
+        userCharacterStatus: FAVORITE
+      }
+    ) {
+      id
+    }
+  }
+`;
+
+const Main: React.FC<Props> = ({ character, refetchCharacter }) => {
+  const { user } = useAuth();
+
+  const [createUserCharacter] = useMutation(CREATE_USER_CHARACTER);
+  const [deleteUserCharacter] = useMutation(DELETE_USER_CHARACTER);
+
+  const handleToogleFavorite = useCallback(async () => {
+    if (character.isFavorited) {
+      await deleteUserCharacter({
+        variables: {
+          userId: user.id,
+          characterId: character.id,
+        },
+      });
+      await refetchCharacter();
+    } else {
+      await createUserCharacter({
+        variables: {
+          userId: user.id,
+          characterId: character.id,
+        },
+      });
+      await refetchCharacter();
+    }
+  }, [
+    createUserCharacter,
+    deleteUserCharacter,
+    character.id,
+    character.isFavorited,
+    refetchCharacter,
+    user.id,
+  ]);
+
   return (
     <Container>
       <BannerImage source={{ uri: character.bannerImageUrl }} />
@@ -31,21 +94,26 @@ const Main: React.FC<Props> = ({ character }) => {
 
       <ButtonsContainer>
         <Button>
-          <Icon name="play" />
+          <FeatherIcons name="play" />
 
           <ButtonLabel>Assistir</ButtonLabel>
         </Button>
 
         <Button>
-          <Icon name="bell" />
+          <FeatherIcons name="bell" />
 
           <ButtonLabel>Seguir</ButtonLabel>
         </Button>
 
-        <Button>
-          <Icon name="heart" />
+        <Button onPress={handleToogleFavorite}>
+          <IoniconsIcons
+            name={character.isFavorited ? 'heart' : 'heart-outline'}
+            color={character.isFavorited ? '#f50303' : '#03a9f5'}
+          />
 
-          <ButtonLabel>Favoritar</ButtonLabel>
+          <ButtonLabel>
+            {character.isFavorited ? 'Favoritado' : 'Favoritar'}
+          </ButtonLabel>
         </Button>
       </ButtonsContainer>
     </Container>
