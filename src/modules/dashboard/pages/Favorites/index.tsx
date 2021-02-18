@@ -1,7 +1,9 @@
 import { gql, useQuery } from '@apollo/client';
 import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useEffect, useState } from 'react';
-import { useWindowDimensions } from 'react-native';
+import { FlatList, useWindowDimensions } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
 import { useAuth } from '../../../auth/hooks/auth';
 import {
   MediaAuthor,
@@ -75,7 +77,6 @@ const Favorites: React.FC = () => {
     [navigation],
   );
 
-  if (loading) return null;
   return (
     <Container>
       <Header>
@@ -85,26 +86,51 @@ const Favorites: React.FC = () => {
         </HeaderButton>
       </Header>
       <ListContainer>
-        <List
-          key={windowWidth}
-          numColumns={Math.floor(windowWidth / 120)}
-          data={data.user.userMedias.edges}
-          keyExtractor={userMedia => userMedia.id}
-          columnWrapperStyle={{ justifyContent: 'center' }}
-          renderItem={({ item: userMedia }) => (
-            <MediaCard onPress={() => handleMediaCardPress(userMedia.node)}>
-              <MediaImage source={{ uri: userMedia.node.coverImageUrl }} />
-              <MediaMetaContainer>
-                <MediaTitle numberOfLines={2}>
-                  {userMedia.node.title}
-                </MediaTitle>
-                <MediaAuthor numberOfLines={1}>
-                  {userMedia.node.authors || 'Desconhecido'}
-                </MediaAuthor>
-              </MediaMetaContainer>
-            </MediaCard>
-          )}
-        />
+        {loading ? (
+          <FlatList
+            key={windowWidth}
+            numColumns={Math.floor(windowWidth / 120)}
+            data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+            keyExtractor={id => id.toString()}
+            columnWrapperStyle={{ justifyContent: 'center' }}
+            renderItem={({ item: id }) => (
+              <ShimmerPlaceHolder
+                key={id}
+                LinearGradient={LinearGradient}
+                style={{
+                  borderRadius: 3,
+                  width: 100,
+                  height: 200,
+                  marginRight: 5,
+                  marginLeft: 5,
+                  marginBottom: 10,
+                }}
+                shimmerColors={['#1e1e1e', '#2a2a2a', '#1e1e1e']}
+              />
+            )}
+          />
+        ) : (
+          <List
+            key={windowWidth}
+            numColumns={Math.floor(windowWidth / 120)}
+            data={data.user.userMedias.edges}
+            keyExtractor={userMedia => userMedia.id}
+            columnWrapperStyle={{ justifyContent: 'center' }}
+            renderItem={({ item: userMedia }) => (
+              <MediaCard onPress={() => handleMediaCardPress(userMedia.node)}>
+                <MediaImage source={{ uri: userMedia.node.coverImageUrl }} />
+                <MediaMetaContainer>
+                  <MediaTitle numberOfLines={2}>
+                    {userMedia.node.title}
+                  </MediaTitle>
+                  <MediaAuthor numberOfLines={1}>
+                    {userMedia.node.authors || 'Desconhecido'}
+                  </MediaAuthor>
+                </MediaMetaContainer>
+              </MediaCard>
+            )}
+          />
+        )}
       </ListContainer>
     </Container>
   );

@@ -9,7 +9,8 @@ export const Container = styled.SafeAreaView`
 `;
 
 export const ListContainer = styled.View`
-  margin: 10px;
+  margin-top: 10px;
+  margin-bottom: 0px;
 `;
 
 export const List = styled(FlatList as new () => FlatList<Media>)``;
