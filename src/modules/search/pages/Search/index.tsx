@@ -2,7 +2,13 @@
 
 import { gql, useLazyQuery } from '@apollo/client';
 import { useNavigation } from '@react-navigation/native';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { FlatList, TextInput, useWindowDimensions } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
@@ -49,7 +55,7 @@ const Search: React.FC = () => {
 
   const navigation = useNavigation();
 
-  const windowWidth = useWindowDimensions().width;
+  const { width: windowWidth, height: windowHeight } = useWindowDimensions();
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -76,6 +82,22 @@ const Search: React.FC = () => {
     [navigation],
   );
 
+  const listColumnsAmount = useMemo(() => Math.floor(windowWidth / 120), [
+    windowWidth,
+  ]);
+
+  const listRowsAmount = useMemo(() => Math.floor(windowHeight / 210), [
+    windowHeight,
+  ]);
+
+  const arrayOfMediaTileShimmerIds = useMemo(() => {
+    const array = [];
+    for (let i = 0; i < listColumnsAmount * listRowsAmount; i++) {
+      array.push(i);
+    }
+    return array;
+  }, [listColumnsAmount, listRowsAmount]);
+
   return (
     <Container>
       <Header>
@@ -101,8 +123,8 @@ const Search: React.FC = () => {
         {loading ? (
           <FlatList
             key={windowWidth}
-            numColumns={Math.floor(windowWidth / 120)}
-            data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+            numColumns={listColumnsAmount}
+            data={arrayOfMediaTileShimmerIds}
             keyExtractor={id => id.toString()}
             columnWrapperStyle={{ justifyContent: 'center' }}
             renderItem={({ item: id }) => <MediaTileShimmer key={id} />}
@@ -110,7 +132,7 @@ const Search: React.FC = () => {
         ) : (
           <List
             key={windowWidth}
-            numColumns={Math.floor(windowWidth / 120)}
+            numColumns={listColumnsAmount}
             data={data?.page.medias}
             keyExtractor={media => media.id}
             columnWrapperStyle={{ justifyContent: 'center' }}

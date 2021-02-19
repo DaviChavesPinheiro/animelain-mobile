@@ -1,9 +1,7 @@
 import { gql, useQuery } from '@apollo/client';
 import { useNavigation } from '@react-navigation/native';
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { FlatList, useWindowDimensions } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
 import MediaTile from '../../../../media/components/MediaTile';
 import MediaTileShimmer from '../../../../media/components/MediaTileShimmer';
 import { Container, List, ListContainer } from './styles';
@@ -30,7 +28,7 @@ const LIST_MEDIAS = gql`
 
 const Season: React.FC = () => {
   const { data, loading } = useQuery(LIST_MEDIAS);
-  const windowWidth = useWindowDimensions().width;
+  const { width: windowWidth, height: windowHeight } = useWindowDimensions();
 
   const navigation = useNavigation();
 
@@ -41,14 +39,30 @@ const Season: React.FC = () => {
     [navigation],
   );
 
+  const listColumnsAmount = useMemo(() => Math.floor(windowWidth / 120), [
+    windowWidth,
+  ]);
+
+  const listRowsAmount = useMemo(() => Math.floor(windowHeight / 210), [
+    windowHeight,
+  ]);
+
+  const arrayOfMediaTileShimmerIds = useMemo(() => {
+    const array = [];
+    for (let i = 0; i < listColumnsAmount * listRowsAmount; i++) {
+      array.push(i);
+    }
+    return array;
+  }, [listColumnsAmount, listRowsAmount]);
+
   return (
     <Container>
       <ListContainer>
         {loading ? (
           <FlatList
             key={windowWidth}
-            numColumns={Math.floor(windowWidth / 120)}
-            data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+            numColumns={listColumnsAmount}
+            data={arrayOfMediaTileShimmerIds}
             keyExtractor={id => id.toString()}
             columnWrapperStyle={{ justifyContent: 'center' }}
             renderItem={({ item: id }) => <MediaTileShimmer key={id} />}
@@ -56,7 +70,7 @@ const Season: React.FC = () => {
         ) : (
           <List
             key={windowWidth}
-            numColumns={Math.floor(windowWidth / 120)}
+            numColumns={listColumnsAmount}
             data={data.page.medias}
             keyExtractor={media => media.id}
             columnWrapperStyle={{ justifyContent: 'center' }}
