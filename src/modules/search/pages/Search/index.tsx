@@ -7,6 +7,7 @@ import { FlatList, TextInput, useWindowDimensions } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
 import MediaTile from '../../../media/components/MediaTile';
+import MediaTileShimmer from '../../../media/components/MediaTileShimmer';
 
 import {
   BackButton,
@@ -104,21 +105,7 @@ const Search: React.FC = () => {
             data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
             keyExtractor={id => id.toString()}
             columnWrapperStyle={{ justifyContent: 'center' }}
-            renderItem={({ item: id }) => (
-              <ShimmerPlaceHolder
-                key={id}
-                LinearGradient={LinearGradient}
-                style={{
-                  borderRadius: 3,
-                  width: 100,
-                  height: 200,
-                  marginRight: 5,
-                  marginLeft: 5,
-                  marginBottom: 10,
-                }}
-                shimmerColors={['#1e1e1e', '#2a2a2a', '#1e1e1e']}
-              />
-            )}
+            renderItem={({ item: id }) => <MediaTileShimmer key={id} />}
           />
         ) : (
           <List
