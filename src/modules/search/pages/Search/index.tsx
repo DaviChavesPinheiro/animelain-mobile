@@ -6,13 +6,9 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { FlatList, TextInput, useWindowDimensions } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
+import MediaTile from '../../../media/components/MediaTile';
 
 import {
-  MediaAuthor,
-  MediaCard,
-  MediaImage,
-  MediaMetaContainer,
-  MediaTitle,
   BackButton,
   Container,
   Header,
@@ -132,15 +128,13 @@ const Search: React.FC = () => {
             keyExtractor={media => media.id}
             columnWrapperStyle={{ justifyContent: 'center' }}
             renderItem={({ item: media }) => (
-              <MediaCard onPress={() => handleMediaCardPress(media)}>
-                <MediaImage source={{ uri: media.coverImageUrl }} />
-                <MediaMetaContainer>
-                  <MediaTitle numberOfLines={2}>{media.title}</MediaTitle>
-                  <MediaAuthor numberOfLines={1}>
-                    {media.authors || 'Desconhecido'}
-                  </MediaAuthor>
-                </MediaMetaContainer>
-              </MediaCard>
+              <MediaTile
+                key={media.id}
+                title={media.title}
+                imageUri={media.coverImageUrl}
+                description={media.authors}
+                onPress={() => handleMediaCardPress(media)}
+              />
             )}
           />
         )}

@@ -4,16 +4,8 @@ import React, { useCallback } from 'react';
 import { FlatList, useWindowDimensions } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
-import {
-  MediaAuthor,
-  MediaCard,
-  MediaImage,
-  MediaMetaContainer,
-  MediaTitle,
-  Container,
-  List,
-  ListContainer,
-} from './styles';
+import MediaTile from '../../../../media/components/MediaTile';
+import { Container, List, ListContainer } from './styles';
 
 export interface Media {
   id: string;
@@ -82,15 +74,13 @@ const All: React.FC = () => {
             keyExtractor={media => media.id}
             columnWrapperStyle={{ justifyContent: 'center' }}
             renderItem={({ item: media }) => (
-              <MediaCard onPress={() => handleMediaCardPress(media)}>
-                <MediaImage source={{ uri: media.coverImageUrl }} />
-                <MediaMetaContainer>
-                  <MediaTitle numberOfLines={2}>{media.title}</MediaTitle>
-                  <MediaAuthor numberOfLines={1}>
-                    {media.authors || 'Desconhecido'}
-                  </MediaAuthor>
-                </MediaMetaContainer>
-              </MediaCard>
+              <MediaTile
+                key={media.id}
+                title={media.title}
+                imageUri={media.coverImageUrl}
+                description={media.authors}
+                onPress={() => handleMediaCardPress(media)}
+              />
             )}
           />
         )}

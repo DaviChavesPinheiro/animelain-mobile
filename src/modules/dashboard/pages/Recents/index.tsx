@@ -1,16 +1,12 @@
 import { gql, useQuery } from '@apollo/client';
 import { useNavigation } from '@react-navigation/native';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
 import { FlatList, useWindowDimensions } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
 import { useAuth } from '../../../auth/hooks/auth';
+import MediaTile from '../../../media/components/MediaTile';
 import {
-  MediaAuthor,
-  MediaCard,
-  MediaImage,
-  MediaMetaContainer,
-  MediaTitle,
   Container,
   Header,
   HeaderButton,
@@ -117,17 +113,13 @@ const Recents: React.FC = () => {
             keyExtractor={userMedia => userMedia.id}
             columnWrapperStyle={{ justifyContent: 'center' }}
             renderItem={({ item: userMedia }) => (
-              <MediaCard onPress={() => handleMediaCardPress(userMedia.node)}>
-                <MediaImage source={{ uri: userMedia.node.coverImageUrl }} />
-                <MediaMetaContainer>
-                  <MediaTitle numberOfLines={2}>
-                    {userMedia.node.title}
-                  </MediaTitle>
-                  <MediaAuthor numberOfLines={1}>
-                    {userMedia.node.authors || 'Desconhecido'}
-                  </MediaAuthor>
-                </MediaMetaContainer>
-              </MediaCard>
+              <MediaTile
+                key={userMedia.node.id}
+                title={userMedia.node.title}
+                imageUri={userMedia.node.coverImageUrl}
+                description={userMedia.node.authors}
+                onPress={() => handleMediaCardPress(userMedia.node)}
+              />
             )}
           />
         )}

@@ -11,7 +11,6 @@ export const Header = styled.View`
   flex-direction: row;
   padding: 16px;
   padding-bottom: 6px;
-
   align-items: center;
 `;
 
