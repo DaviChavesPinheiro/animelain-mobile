@@ -19,7 +19,7 @@ import {
   ListContainer,
 } from './styles';
 
-const LIST_USER_MEDIAS = gql`
+export const LIST_USER_MEDIAS_FAVORITES = gql`
   query ListUserMediasFavorites($id: String!) {
     user(id: $id) {
       id
@@ -49,7 +49,7 @@ const LIST_USER_MEDIAS = gql`
 const Favorites: React.FC = () => {
   const { user } = useAuth();
   const { data, loading } = useQuery<ListUserMediasFavorites>(
-    LIST_USER_MEDIAS,
+    LIST_USER_MEDIAS_FAVORITES,
     {
       variables: {
         id: user.id,

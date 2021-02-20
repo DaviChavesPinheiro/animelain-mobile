@@ -4,8 +4,10 @@ import {
   CreateUserMedia,
   DeleteUserMedia,
   ListMedia_media,
+  ListUserMediasFavorites,
 } from '../../../../types/graphql-types';
 import { useAuth } from '../../../auth/hooks/auth';
+import { LIST_USER_MEDIAS_FAVORITES } from '../../../dashboard/pages/Favorites';
 
 import {
   Author,
@@ -68,38 +70,35 @@ const Main: React.FC<Props> = ({ media }) => {
         },
       });
 
-      // const userMediasFavorites = cache.readQuery({
-      //   query: LIST_USER_MEDIAS_FAVORITES,
-      //   variables: {
-      //     id: user.id,
-      //   },
-      // });
+      const userMediasFavorites = cache.readQuery<ListUserMediasFavorites>({
+        query: LIST_USER_MEDIAS_FAVORITES,
+        variables: {
+          id: user.id,
+        },
+      });
 
-      // const newUserMedia = fetchData.createUserMedia;
-      // console.log(cache.identify(userMediasFavorites?.user.userMedias));
-      // console.log(cache.identify(userMediasFavorites?.user));
-      // console.log(cache.identify(userMediasFavorites));
+      const newUserMedia = fetchData.data?.createUserMedia;
 
-      // cache.writeQuery({
-      //   query: LIST_USER_MEDIAS_FAVORITES,
-      //   variables: {
-      //     id: user.id,
-      //   },
-      //   data: {
-      //     user: {
-      //       userMedias: {
-      //         edges: [
-      //           ...userMediasFavorites.user.userMedias.edges,
-      //           fetchData.createUserMedia,
-      //         ],
-      //       },
-      //     },
-      //   },
-      // });
+      cache.writeQuery({
+        query: LIST_USER_MEDIAS_FAVORITES,
+        variables: {
+          id: user.id,
+        },
+        data: {
+          user: {
+            userMedias: {
+              edges: [
+                ...(userMediasFavorites?.user.userMedias.edges || []),
+                newUserMedia,
+              ],
+            },
+          },
+        },
+      });
     },
   });
   const [deleteUserMedia] = useMutation<DeleteUserMedia>(DELETE_USER_MEDIA, {
-    update(cache) {
+    update(cache, fetchData) {
       cache.writeQuery({
         query: LIST_MEDIA,
         variables: {
@@ -108,6 +107,33 @@ const Main: React.FC<Props> = ({ media }) => {
         data: {
           media: {
             isFavorited: false,
+          },
+        },
+      });
+
+      const userMediasFavorites = cache.readQuery<ListUserMediasFavorites>({
+        query: LIST_USER_MEDIAS_FAVORITES,
+        variables: {
+          id: user.id,
+        },
+      });
+
+      const deletedUserMedia = fetchData.data?.deleteUserMedia;
+
+      cache.writeQuery({
+        query: LIST_USER_MEDIAS_FAVORITES,
+        variables: {
+          id: user.id,
+        },
+        data: {
+          user: {
+            userMedias: {
+              edges: [
+                ...(userMediasFavorites?.user.userMedias.edges || []).filter(
+                  userMedia => userMedia.id !== deletedUserMedia?.id,
+                ),
+              ],
+            },
           },
         },
       });

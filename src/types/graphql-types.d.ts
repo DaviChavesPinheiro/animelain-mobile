@@ -188,10 +188,10 @@ export interface ListUserMediasFavoritesVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: QueryAllMedias
+// GraphQL query operation: ListAllMedias
 // ====================================================
 
-export interface QueryAllMedias_page_medias {
+export interface ListAllMedias_page_medias {
   __typename: "Media";
   id: string;
   title: string;
@@ -199,13 +199,13 @@ export interface QueryAllMedias_page_medias {
   coverImageUrl: string | null;
 }
 
-export interface QueryAllMedias_page {
+export interface ListAllMedias_page {
   __typename: "Page";
-  medias: QueryAllMedias_page_medias[];
+  medias: ListAllMedias_page_medias[];
 }
 
-export interface QueryAllMedias {
-  page: QueryAllMedias_page;
+export interface ListAllMedias {
+  page: ListAllMedias_page;
 }
 
 /* tslint:disable */
@@ -214,10 +214,10 @@ export interface QueryAllMedias {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: QuerySeasonMedias
+// GraphQL query operation: ListSeasonMedias
 // ====================================================
 
-export interface QuerySeasonMedias_page_medias {
+export interface ListSeasonMedias_page_medias {
   __typename: "Media";
   id: string;
   title: string;
@@ -225,13 +225,13 @@ export interface QuerySeasonMedias_page_medias {
   coverImageUrl: string | null;
 }
 
-export interface QuerySeasonMedias_page {
+export interface ListSeasonMedias_page {
   __typename: "Page";
-  medias: QuerySeasonMedias_page_medias[];
+  medias: ListSeasonMedias_page_medias[];
 }
 
-export interface QuerySeasonMedias {
-  page: QuerySeasonMedias_page;
+export interface ListSeasonMedias {
+  page: ListSeasonMedias_page;
 }
 
 /* tslint:disable */

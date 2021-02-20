@@ -3,15 +3,15 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useMemo } from 'react';
 import { FlatList, useWindowDimensions } from 'react-native';
 import {
-  QuerySeasonMedias,
-  QuerySeasonMedias_page_medias,
+  ListSeasonMedias,
+  ListSeasonMedias_page_medias,
 } from '../../../../../types/graphql-types';
 import MediaTile from '../../../../media/components/MediaTile';
 import MediaTileShimmer from '../../../../media/components/MediaTileShimmer';
 import { Container, List, ListContainer } from './styles';
 
 const LIST_MEDIAS = gql`
-  query QuerySeasonMedias {
+  query ListSeasonMedias {
     page(input: { page: 1, perPage: 50 }) {
       medias(input: { type: ANIME, season: SUMMER }) {
         id
@@ -24,13 +24,13 @@ const LIST_MEDIAS = gql`
 `;
 
 const Season: React.FC = () => {
-  const { data, loading } = useQuery<QuerySeasonMedias>(LIST_MEDIAS);
+  const { data, loading } = useQuery<ListSeasonMedias>(LIST_MEDIAS);
   const { width: windowWidth, height: windowHeight } = useWindowDimensions();
 
   const navigation = useNavigation();
 
   const handleMediaCardPress = useCallback(
-    (media: QuerySeasonMedias_page_medias) => {
+    (media: ListSeasonMedias_page_medias) => {
       navigation.navigate('Media', { media });
     },
     [navigation],

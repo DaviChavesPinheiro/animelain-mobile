@@ -3,15 +3,15 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useMemo } from 'react';
 import { FlatList, useWindowDimensions } from 'react-native';
 import {
-  QueryAllMedias,
-  QueryAllMedias_page_medias,
+  ListAllMedias,
+  ListAllMedias_page_medias,
 } from '../../../../../types/graphql-types';
 import MediaTile from '../../../../media/components/MediaTile';
 import MediaTileShimmer from '../../../../media/components/MediaTileShimmer';
 import { Container, List, ListContainer } from './styles';
 
-const LIST_MEDIAS = gql`
-  query QueryAllMedias {
+export const LIST_ALL_MEDIAS = gql`
+  query ListAllMedias {
     page(input: { page: 1, perPage: 50 }) {
       medias(input: { type: ANIME }) {
         id
@@ -24,13 +24,13 @@ const LIST_MEDIAS = gql`
 `;
 
 const All: React.FC = () => {
-  const { data, loading } = useQuery<QueryAllMedias>(LIST_MEDIAS);
+  const { data, loading } = useQuery<ListAllMedias>(LIST_ALL_MEDIAS);
   const { width: windowWidth, height: windowHeight } = useWindowDimensions();
 
   const navigation = useNavigation();
 
   const handleMediaCardPress = useCallback(
-    (media: QueryAllMedias_page_medias) => {
+    (media: ListAllMedias_page_medias) => {
       navigation.navigate('Media', { media });
     },
     [navigation],
