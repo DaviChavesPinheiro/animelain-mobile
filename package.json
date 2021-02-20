@@ -7,7 +7,9 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "schema:download": "npx apollo client:download-schema  --endpoint=http://localhost:3333/graphql schema.js",
+    "schema:gen": "npx apollo codegen:generate --localSchemaFile=schema.json --target=typescript --includes=src/**/*.{ts,tsx} --excludes=src/**/*.graphql --tagName=gql --addTypename --outputFlat src/types/graphql-types.d.ts"
   },
   "dependencies": {
     "@apollo/client": "^3.3.9",

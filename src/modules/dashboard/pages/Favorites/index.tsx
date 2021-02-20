@@ -2,8 +2,10 @@ import { gql, useQuery } from '@apollo/client';
 import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useMemo } from 'react';
 import { FlatList, useWindowDimensions } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
+import {
+  ListUserMediasFavorites,
+  ListUserMediasFavorites_user_userMedias_edges_node,
+} from '../../../../types/graphql-types';
 import { useAuth } from '../../../auth/hooks/auth';
 import MediaTile from '../../../media/components/MediaTile';
 import MediaTileShimmer from '../../../media/components/MediaTileShimmer';
@@ -31,8 +33,9 @@ export interface UserMedia {
 }
 
 const LIST_USER_MEDIAS = gql`
-  query UserMedias($id: String!) {
+  query ListUserMediasFavorites($id: String!) {
     user(id: $id) {
+      id
       userMedias(
         input: {
           userMediaStatus: FAVORITE
@@ -58,17 +61,20 @@ const LIST_USER_MEDIAS = gql`
 
 const Favorites: React.FC = () => {
   const { user } = useAuth();
-  const { data, loading } = useQuery(LIST_USER_MEDIAS, {
-    variables: {
-      id: user.id,
+  const { data, loading } = useQuery<ListUserMediasFavorites>(
+    LIST_USER_MEDIAS,
+    {
+      variables: {
+        id: user.id,
+      },
     },
-  });
+  );
   const { width: windowWidth, height: windowHeight } = useWindowDimensions();
 
   const navigation = useNavigation();
 
   const handleMediaCardPress = useCallback(
-    (media: Media) => {
+    (media: ListUserMediasFavorites_user_userMedias_edges_node) => {
       navigation.navigate('Media', { media });
     },
     [navigation],
@@ -112,15 +118,15 @@ const Favorites: React.FC = () => {
           <List
             key={windowWidth}
             numColumns={listColumnsAmount}
-            data={data.user.userMedias.edges}
+            data={data?.user.userMedias.edges || undefined}
             keyExtractor={userMedia => userMedia.id}
             columnWrapperStyle={{ justifyContent: 'center' }}
             renderItem={({ item: userMedia }) => (
               <MediaTile
                 key={userMedia.node.id}
                 title={userMedia.node.title}
-                imageUri={userMedia.node.coverImageUrl}
-                description={userMedia.node.authors}
+                imageUri={userMedia.node.coverImageUrl || undefined}
+                description={userMedia.node.authors?.join(' ') || undefined}
                 onPress={() => handleMediaCardPress(userMedia.node)}
               />
             )}

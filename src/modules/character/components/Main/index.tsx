@@ -1,8 +1,11 @@
 import { gql, useMutation } from '@apollo/client';
 import React, { useCallback } from 'react';
+import {
+  CreateUserCharacter,
+  DeleteUserCharacter,
+  ListCharacter_character,
+} from '../../../../types/graphql-types';
 import { useAuth } from '../../../auth/hooks/auth';
-
-import { Character } from '../../pages/Character';
 
 import {
   Author,
@@ -18,7 +21,7 @@ import {
 } from './styles';
 
 interface Props {
-  character: Character;
+  character?: ListCharacter_character;
   refetchCharacter(): Promise<any>;
 }
 
@@ -60,15 +63,19 @@ const DELETE_USER_CHARACTER = gql`
 const Main: React.FC<Props> = ({ character, refetchCharacter }) => {
   const { user } = useAuth();
 
-  const [createUserCharacter] = useMutation(CREATE_USER_CHARACTER);
-  const [deleteUserCharacter] = useMutation(DELETE_USER_CHARACTER);
+  const [createUserCharacter] = useMutation<CreateUserCharacter>(
+    CREATE_USER_CHARACTER,
+  );
+  const [deleteUserCharacter] = useMutation<DeleteUserCharacter>(
+    DELETE_USER_CHARACTER,
+  );
 
   const handleToogleFavorite = useCallback(async () => {
-    if (character.isFavorited) {
+    if (character?.isFavorited) {
       await deleteUserCharacter({
         variables: {
           userId: user.id,
-          characterId: character.id,
+          characterId: character?.id,
           userCharacterStatus: 'FAVORITE',
         },
       });
@@ -76,7 +83,7 @@ const Main: React.FC<Props> = ({ character, refetchCharacter }) => {
       await createUserCharacter({
         variables: {
           userId: user.id,
-          characterId: character.id,
+          characterId: character?.id,
           userCharacterStatus: 'FAVORITE',
         },
       });
@@ -85,18 +92,18 @@ const Main: React.FC<Props> = ({ character, refetchCharacter }) => {
   }, [
     createUserCharacter,
     deleteUserCharacter,
-    character.id,
-    character.isFavorited,
+    character?.id,
+    character?.isFavorited,
     refetchCharacter,
     user.id,
   ]);
 
   const handleToogleFollow = useCallback(async () => {
-    if (character.isFollowed) {
+    if (character?.isFollowed) {
       await deleteUserCharacter({
         variables: {
           userId: user.id,
-          characterId: character.id,
+          characterId: character?.id,
           userCharacterStatus: 'FOLLOW',
         },
       });
@@ -104,7 +111,7 @@ const Main: React.FC<Props> = ({ character, refetchCharacter }) => {
       await createUserCharacter({
         variables: {
           userId: user.id,
-          characterId: character.id,
+          characterId: character?.id,
           userCharacterStatus: 'FOLLOW',
         },
       });
@@ -113,19 +120,19 @@ const Main: React.FC<Props> = ({ character, refetchCharacter }) => {
   }, [
     createUserCharacter,
     deleteUserCharacter,
-    character.id,
-    character.isFollowed,
+    character?.id,
+    character?.isFollowed,
     refetchCharacter,
     user.id,
   ]);
 
   return (
     <Container>
-      <BannerImage source={{ uri: character.bannerImageUrl }} />
+      <BannerImage source={{ uri: character?.bannerImageUrl || undefined }} />
 
-      <ProfileImage source={{ uri: character.coverImageUrl }} />
+      <ProfileImage source={{ uri: character?.coverImageUrl || undefined }} />
 
-      <Title>{character.name}</Title>
+      <Title>{character?.name}</Title>
 
       <Author>Por Naoki Urasawa</Author>
 
@@ -137,21 +144,21 @@ const Main: React.FC<Props> = ({ character, refetchCharacter }) => {
         </Button>
 
         <Button onPress={handleToogleFollow}>
-          <FeatherIcons name={character.isFollowed ? 'bell' : 'bell-off'} />
+          <FeatherIcons name={character?.isFollowed ? 'bell' : 'bell-off'} />
 
           <ButtonLabel>
-            {character.isFollowed ? 'Seguindo' : 'Seguir'}
+            {character?.isFollowed ? 'Seguindo' : 'Seguir'}
           </ButtonLabel>
         </Button>
 
         <Button onPress={handleToogleFavorite}>
           <IoniconsIcons
-            name={character.isFavorited ? 'heart' : 'heart-outline'}
-            color={character.isFavorited ? '#f50303' : '#03a9f5'}
+            name={character?.isFavorited ? 'heart' : 'heart-outline'}
+            color={character?.isFavorited ? '#f50303' : '#03a9f5'}
           />
 
           <ButtonLabel>
-            {character.isFavorited ? 'Favoritado' : 'Favoritar'}
+            {character?.isFavorited ? 'Favoritado' : 'Favoritar'}
           </ButtonLabel>
         </Button>
       </ButtonsContainer>

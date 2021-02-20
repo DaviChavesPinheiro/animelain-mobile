@@ -87,7 +87,7 @@ const LIST_MEDIA = gql`
 
 const Media: React.FC = () => {
   const route = useRoute<RouteProp<{ params: { media: Media } }, 'params'>>();
-  const { data, loading, refetch } = useQuery(LIST_MEDIA, {
+  const { data, loading } = useQuery(LIST_MEDIA, {
     variables: {
       id: route.params.media.id,
     },
@@ -103,7 +103,7 @@ const Media: React.FC = () => {
         </BackButton>
       </Header>
       <ScrollView>
-        <Main media={data.media} refetchMedia={refetch} />
+        <Main media={data.media} />
         <Description media={data.media} />
         <Categories media={data.media} />
         <Characters media={data.media} />

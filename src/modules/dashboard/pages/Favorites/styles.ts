@@ -1,8 +1,7 @@
 import styled from 'styled-components/native';
 import FeatherIcons from 'react-native-vector-icons/Feather';
 import { FlatList } from 'react-native';
-import { RectButton } from 'react-native-gesture-handler';
-import { UserMedia } from '.';
+import { ListUserMediasFavorites_user_userMedias_edges } from '../../../../types/graphql-types';
 
 export const Container = styled.SafeAreaView`
   flex: 1;
@@ -36,4 +35,6 @@ export const ListContainer = styled.View`
   margin: 10px;
 `;
 
-export const List = styled(FlatList as new () => FlatList<UserMedia>)``;
+export const List = styled(
+  FlatList as new () => FlatList<ListUserMediasFavorites_user_userMedias_edges>,
+)``;

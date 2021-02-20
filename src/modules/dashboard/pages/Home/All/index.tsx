@@ -2,21 +2,16 @@ import { gql, useQuery } from '@apollo/client';
 import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useMemo } from 'react';
 import { FlatList, useWindowDimensions } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
+import {
+  QueryAllMedias,
+  QueryAllMedias_page_medias,
+} from '../../../../../types/graphql-types';
 import MediaTile from '../../../../media/components/MediaTile';
 import MediaTileShimmer from '../../../../media/components/MediaTileShimmer';
 import { Container, List, ListContainer } from './styles';
 
-export interface Media {
-  id: string;
-  title: string;
-  authors?: string;
-  coverImageUrl?: string;
-}
-
 const LIST_MEDIAS = gql`
-  query {
+  query QueryAllMedias {
     page(input: { page: 1, perPage: 50 }) {
       medias(input: { type: ANIME }) {
         id
@@ -29,13 +24,13 @@ const LIST_MEDIAS = gql`
 `;
 
 const All: React.FC = () => {
-  const { data, loading } = useQuery(LIST_MEDIAS);
+  const { data, loading } = useQuery<QueryAllMedias>(LIST_MEDIAS);
   const { width: windowWidth, height: windowHeight } = useWindowDimensions();
 
   const navigation = useNavigation();
 
   const handleMediaCardPress = useCallback(
-    (media: Media) => {
+    (media: QueryAllMedias_page_medias) => {
       navigation.navigate('Media', { media });
     },
     [navigation],
@@ -73,15 +68,15 @@ const All: React.FC = () => {
           <List
             key={windowWidth}
             numColumns={listColumnsAmount}
-            data={data.page.medias}
+            data={data?.page.medias}
             keyExtractor={media => media.id}
             columnWrapperStyle={{ justifyContent: 'center' }}
             renderItem={({ item: media }) => (
               <MediaTile
                 key={media.id}
                 title={media.title}
-                imageUri={media.coverImageUrl}
-                description={media.authors}
+                imageUri={media.coverImageUrl || undefined}
+                description={media.authors?.join(' ') || undefined}
                 onPress={() => handleMediaCardPress(media)}
               />
             )}

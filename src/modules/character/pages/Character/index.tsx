@@ -1,22 +1,15 @@
 import { gql, useQuery } from '@apollo/client';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
+import {
+  ListCharacter,
+  ListCharacter_character,
+} from '../../../../types/graphql-types';
 import Description from '../../components/Description';
 import Main from '../../components/Main';
 
 import { BackButton, Container, Header, HeaderIcon } from './styles';
-
-export interface Character {
-  id: string;
-  name: string;
-  age?: number;
-  description?: string;
-  isFavorited?: boolean;
-  isFollowed?: boolean;
-  coverImageUrl?: string;
-  bannerImageUrl?: string;
-}
 
 const LIST_CHARACTER = gql`
   query ListCharacter($id: String!) {
@@ -35,16 +28,16 @@ const LIST_CHARACTER = gql`
 
 const Character: React.FC = () => {
   const route = useRoute<
-    RouteProp<{ params: { character: Character } }, 'params'>
+    RouteProp<{ params: { character: ListCharacter_character } }, 'params'>
   >();
-  const { data, loading, refetch } = useQuery(LIST_CHARACTER, {
+  const { data, loading, refetch } = useQuery<ListCharacter>(LIST_CHARACTER, {
     variables: {
       id: route.params.character.id,
     },
   });
   const navigation = useNavigation();
 
-  if (loading) return null;
+  if (loading || !data) return null;
   return (
     <Container>
       <Header>
@@ -54,9 +47,12 @@ const Character: React.FC = () => {
       </Header>
 
       <ScrollView>
-        <Main character={data.character} refetchCharacter={refetch} />
+        <Main
+          character={data.character || undefined}
+          refetchCharacter={refetch}
+        />
 
-        <Description character={data.character} />
+        <Description character={data.character || undefined} />
       </ScrollView>
     </Container>
   );

@@ -1,11 +1,10 @@
 import React from 'react';
-
-import { Character } from '../../pages/Character';
+import { ListCharacter_character } from '../../../../types/graphql-types';
 
 import { Description, Container, Title } from './styles';
 
 interface Props {
-  character: Character;
+  character?: ListCharacter_character;
 }
 
 const DescriptionPage: React.FC<Props> = ({ character }) => {
@@ -13,7 +12,7 @@ const DescriptionPage: React.FC<Props> = ({ character }) => {
     <Container>
       <Title>Descrição</Title>
 
-      <Description>{character.description || 'Sem descrição'}</Description>
+      <Description>{character?.description || 'Sem descrição'}</Description>
     </Container>
   );
 };

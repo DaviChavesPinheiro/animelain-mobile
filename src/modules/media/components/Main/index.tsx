@@ -19,7 +19,6 @@ import {
 
 interface Props {
   media: Media;
-  refetchMedia(): Promise<any>;
 }
 
 const CREATE_USER_MEDIA = gql`
@@ -41,11 +40,76 @@ const DELETE_USER_MEDIA = gql`
   }
 `;
 
-const Main: React.FC<Props> = ({ media, refetchMedia }) => {
+const LIST_MEDIA = gql`
+  query ListMediaForQuery($id: String!) {
+    media(id: $id) {
+      id
+    }
+  }
+`;
+
+const Main: React.FC<Props> = ({ media }) => {
   const { user } = useAuth();
 
-  const [createUserMedia] = useMutation(CREATE_USER_MEDIA);
-  const [deleteUserMedia] = useMutation(DELETE_USER_MEDIA);
+  const [createUserMedia] = useMutation(CREATE_USER_MEDIA, {
+    update(cache, fetchData) {
+      cache.writeQuery({
+        query: LIST_MEDIA,
+        variables: {
+          id: media.id,
+        },
+        data: {
+          media: {
+            isFavorited: true,
+          },
+        },
+      });
+
+      // const userMediasFavorites = cache.readQuery({
+      //   query: LIST_USER_MEDIAS_FAVORITES,
+      //   variables: {
+      //     id: user.id,
+      //   },
+      // });
+
+      // const newUserMedia = fetchData.createUserMedia;
+      // console.log(cache.identify(userMediasFavorites?.user.userMedias));
+      // console.log(cache.identify(userMediasFavorites?.user));
+      // console.log(cache.identify(userMediasFavorites));
+
+      // cache.writeQuery({
+      //   query: LIST_USER_MEDIAS_FAVORITES,
+      //   variables: {
+      //     id: user.id,
+      //   },
+      //   data: {
+      //     user: {
+      //       userMedias: {
+      //         edges: [
+      //           ...userMediasFavorites.user.userMedias.edges,
+      //           fetchData.createUserMedia,
+      //         ],
+      //       },
+      //     },
+      //   },
+      // });
+    },
+  });
+  const [deleteUserMedia] = useMutation(DELETE_USER_MEDIA, {
+    update(cache) {
+      cache.writeQuery({
+        query: LIST_MEDIA,
+        variables: {
+          id: media.id,
+        },
+        data: {
+          media: {
+            isFavorited: false,
+          },
+        },
+      });
+    },
+  });
 
   const handleToogleFavorite = useCallback(async () => {
     if (media.isFavorited) {
@@ -55,7 +119,6 @@ const Main: React.FC<Props> = ({ media, refetchMedia }) => {
           mediaId: media.id,
         },
       });
-      await refetchMedia();
     } else {
       await createUserMedia({
         variables: {
@@ -63,16 +126,8 @@ const Main: React.FC<Props> = ({ media, refetchMedia }) => {
           mediaId: media.id,
         },
       });
-      await refetchMedia();
     }
-  }, [
-    createUserMedia,
-    deleteUserMedia,
-    media.id,
-    media.isFavorited,
-    refetchMedia,
-    user.id,
-  ]);
+  }, [createUserMedia, deleteUserMedia, media.id, media.isFavorited, user.id]);
 
   return (
     <Container>

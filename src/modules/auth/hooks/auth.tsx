@@ -76,7 +76,7 @@ export const AuthProvider: React.FC = ({ children }) => {
   const signIn = useCallback(async ({ email, password }: SignInCredentials) => {
     const response = await client.mutate({
       mutation: gql`
-        mutation {
+        mutation CreateSession{
           createSession(
             input: { email: "${email}", password: "${password}" }
           ) {
