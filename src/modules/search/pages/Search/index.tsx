@@ -9,7 +9,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { FlatList, TextInput, useWindowDimensions } from 'react-native';
+import { FlatList, useWindowDimensions } from 'react-native';
 import {
   QuerySearch,
   QuerySearch_page_medias,
@@ -27,12 +27,6 @@ import {
   SearchInput,
 } from './styles';
 
-export interface Media {
-  id: string;
-  title: string;
-  authors?: string;
-  coverImageUrl?: string;
-}
 const SEARCH_MEDIA = gql`
   query QuerySearch($search: String!) {
     page(input: { page: 1, perPage: 50 }) {
@@ -47,7 +41,7 @@ const SEARCH_MEDIA = gql`
 `;
 
 const Search: React.FC = () => {
-  const inputRef = useRef<TextInput>(null);
+  const inputRef = useRef<any>(null);
   const [searchValue, setSearchValue] = useState('');
   const [getMedias, { loading, data }] = useLazyQuery<QuerySearch>(
     SEARCH_MEDIA,

@@ -19,19 +19,6 @@ import {
   ListContainer,
 } from './styles';
 
-interface Media {
-  id: string;
-  title: string;
-  type: string;
-  authors?: string;
-  coverImageUrl?: string;
-}
-
-export interface UserMedia {
-  id: string;
-  node: Media;
-}
-
 const LIST_USER_MEDIAS = gql`
   query ListUserMediasCurrent($id: String!) {
     user(id: $id) {
