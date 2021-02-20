@@ -1,8 +1,11 @@
 import { gql, useMutation } from '@apollo/client';
 import React, { useCallback } from 'react';
+import {
+  CreateUserMedia,
+  DeleteUserMedia,
+  ListMedia_media,
+} from '../../../../types/graphql-types';
 import { useAuth } from '../../../auth/hooks/auth';
-
-import { Media } from '../../pages/Media';
 
 import {
   Author,
@@ -18,7 +21,7 @@ import {
 } from './styles';
 
 interface Props {
-  media: Media;
+  media: ListMedia_media;
 }
 
 const CREATE_USER_MEDIA = gql`
@@ -51,7 +54,7 @@ const LIST_MEDIA = gql`
 const Main: React.FC<Props> = ({ media }) => {
   const { user } = useAuth();
 
-  const [createUserMedia] = useMutation(CREATE_USER_MEDIA, {
+  const [createUserMedia] = useMutation<CreateUserMedia>(CREATE_USER_MEDIA, {
     update(cache, fetchData) {
       cache.writeQuery({
         query: LIST_MEDIA,
@@ -95,7 +98,7 @@ const Main: React.FC<Props> = ({ media }) => {
       // });
     },
   });
-  const [deleteUserMedia] = useMutation(DELETE_USER_MEDIA, {
+  const [deleteUserMedia] = useMutation<DeleteUserMedia>(DELETE_USER_MEDIA, {
     update(cache) {
       cache.writeQuery({
         query: LIST_MEDIA,
@@ -131,9 +134,9 @@ const Main: React.FC<Props> = ({ media }) => {
 
   return (
     <Container>
-      <BannerImage source={{ uri: media.bannerImageUrl }} />
+      <BannerImage source={{ uri: media.bannerImageUrl || undefined }} />
 
-      <ProfileImage source={{ uri: media.coverImageUrl }} />
+      <ProfileImage source={{ uri: media.coverImageUrl || undefined }} />
 
       <Title>{media.title}</Title>
 

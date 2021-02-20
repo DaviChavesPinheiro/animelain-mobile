@@ -1,8 +1,10 @@
 import { useNavigation } from '@react-navigation/native';
 
 import React, { useCallback } from 'react';
-
-import { Media, Character } from '../../pages/Media';
+import {
+  ListMedia_media,
+  ListMedia_media_characters_edges_node,
+} from '../../../../types/graphql-types';
 
 import {
   CharacterContainer,
@@ -15,14 +17,14 @@ import {
 } from './styles';
 
 interface Props {
-  media: Media;
+  media: ListMedia_media;
 }
 
 const Characters: React.FC<Props> = ({ media }) => {
   const navigation = useNavigation();
 
   const handleCharacterPress = useCallback(
-    (character: Character) => {
+    (character: ListMedia_media_characters_edges_node) => {
       navigation.navigate('Character', { character });
     },
 
@@ -39,7 +41,7 @@ const Characters: React.FC<Props> = ({ media }) => {
           activeOpacity={0.5}
           onPress={() => handleCharacterPress(node)}
         >
-          <CharacterImage source={{ uri: node.coverImageUrl }} />
+          <CharacterImage source={{ uri: node.coverImageUrl || undefined }} />
 
           <CharacterMeta>
             <CharacterName>{node.name}</CharacterName>

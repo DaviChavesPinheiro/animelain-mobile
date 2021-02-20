@@ -33,6 +33,11 @@ export interface CreateSession {
   createSession: CreateSession_createSession;
 }
 
+export interface CreateSessionVariables {
+  email: string;
+  password: string;
+}
+
 /* tslint:disable */
 /* eslint-disable */
 // @generated
@@ -431,6 +436,7 @@ export interface ListMedia_media {
   isFavorited: boolean | null;
   coverImageUrl: string | null;
   bannerImageUrl: string | null;
+  episodesAmount: number | null;
   categories: ListMedia_media_categories;
   characters: ListMedia_media_characters;
 }
@@ -449,10 +455,10 @@ export interface ListMediaVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: Search
+// GraphQL query operation: QuerySearch
 // ====================================================
 
-export interface Search_page_medias {
+export interface QuerySearch_page_medias {
   __typename: "Media";
   id: string;
   title: string;
@@ -460,16 +466,16 @@ export interface Search_page_medias {
   coverImageUrl: string | null;
 }
 
-export interface Search_page {
+export interface QuerySearch_page {
   __typename: "Page";
-  medias: Search_page_medias[];
+  medias: QuerySearch_page_medias[];
 }
 
-export interface Search {
-  page: Search_page;
+export interface QuerySearch {
+  page: QuerySearch_page;
 }
 
-export interface SearchVariables {
+export interface QuerySearchVariables {
   search: string;
 }
 

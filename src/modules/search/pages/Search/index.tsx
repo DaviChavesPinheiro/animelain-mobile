@@ -10,8 +10,10 @@ import React, {
   useState,
 } from 'react';
 import { FlatList, TextInput, useWindowDimensions } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
+import {
+  QuerySearch,
+  QuerySearch_page_medias,
+} from '../../../../types/graphql-types';
 import MediaTile from '../../../media/components/MediaTile';
 import MediaTileShimmer from '../../../media/components/MediaTileShimmer';
 
@@ -32,7 +34,7 @@ export interface Media {
   coverImageUrl?: string;
 }
 const SEARCH_MEDIA = gql`
-  query Search($search: String!) {
+  query QuerySearch($search: String!) {
     page(input: { page: 1, perPage: 50 }) {
       medias(input: { type: ANIME, search: $search }) {
         id
@@ -47,11 +49,14 @@ const SEARCH_MEDIA = gql`
 const Search: React.FC = () => {
   const inputRef = useRef<TextInput>(null);
   const [searchValue, setSearchValue] = useState('');
-  const [getMedias, { loading, data }] = useLazyQuery(SEARCH_MEDIA, {
-    variables: {
-      search: searchValue,
+  const [getMedias, { loading, data }] = useLazyQuery<QuerySearch>(
+    SEARCH_MEDIA,
+    {
+      variables: {
+        search: searchValue,
+      },
     },
-  });
+  );
 
   const navigation = useNavigation();
 
@@ -75,7 +80,7 @@ const Search: React.FC = () => {
   );
 
   const handleMediaCardPress = useCallback(
-    (media: Media) => {
+    (media: QuerySearch_page_medias) => {
       navigation.navigate('Media', { media });
     },
 
@@ -140,8 +145,8 @@ const Search: React.FC = () => {
               <MediaTile
                 key={media.id}
                 title={media.title}
-                imageUri={media.coverImageUrl}
-                description={media.authors}
+                imageUri={media.coverImageUrl || undefined}
+                description={media.authors?.join(' ') || undefined}
                 onPress={() => handleMediaCardPress(media)}
               />
             )}

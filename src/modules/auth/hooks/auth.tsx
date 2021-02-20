@@ -8,8 +8,9 @@ import React, {
 
 import AsyncStorage from '@react-native-community/async-storage';
 
-import { createHttpLink, gql } from '@apollo/client';
+import { createHttpLink, gql, useMutation } from '@apollo/client';
 import client from '../../../shared/services/client';
+import { CreateSession } from '../../../types/graphql-types';
 
 interface User {
   id: string;
@@ -18,9 +19,9 @@ interface User {
   avatar?: {
     id: string;
     url: string;
-    width?: number;
-    height?: number;
-  };
+    width?: number | null;
+    height?: number | null;
+  } | null;
 }
 
 interface AuthState {
@@ -43,8 +44,28 @@ interface AuthContextData {
 
 const AuthContext = createContext({} as AuthContextData);
 
+const CREATE_SESSION = gql`
+  mutation CreateSession($email: String!, $password: String!) {
+    createSession(input: { email: $email, password: $password }) {
+      user {
+        id
+        name
+        email
+        avatar {
+          id
+          url
+          width
+          height
+        }
+      }
+      token
+    }
+  }
+`;
+
 export const AuthProvider: React.FC = ({ children }) => {
-  const [data, setData] = useState<AuthState>({} as AuthState);
+  const [authData, setAuthData] = useState<AuthState>({} as AuthState);
+  const [createSession] = useMutation<CreateSession>(CREATE_SESSION);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -64,7 +85,7 @@ export const AuthProvider: React.FC = ({ children }) => {
 
         client.setLink(link);
 
-        setData({ token: token[1], user: JSON.parse(user[1]) });
+        setAuthData({ token: token[1], user: JSON.parse(user[1]) });
       }
 
       setLoading(false);
@@ -73,71 +94,60 @@ export const AuthProvider: React.FC = ({ children }) => {
     loadStoragedData();
   }, []);
 
-  const signIn = useCallback(async ({ email, password }: SignInCredentials) => {
-    const response = await client.mutate({
-      mutation: gql`
-        mutation CreateSession{
-          createSession(
-            input: { email: "${email}", password: "${password}" }
-          ) {
-            user {
-              id
-              name
-              email
-              avatar {
-                id
-                url
-                width
-                height
-              }
-            }
-            token
-          }
-        }
-      `,
-    });
+  const signIn = useCallback(
+    async ({ email, password }: SignInCredentials) => {
+      const response = await createSession({
+        variables: {
+          email,
+          password,
+        },
+      });
 
-    const { token, user } = response.data.createSession;
+      if (!response.data) throw new Error('SignIn CreateSession Error');
 
-    await AsyncStorage.multiSet([
-      ['@AnimeLain:token', token],
-      ['@AnimeLain:user', JSON.stringify(user)],
-    ]);
+      const { token, user } = response.data.createSession;
 
-    const link = createHttpLink({
-      uri: 'http://192.168.0.49:3333/graphql',
-      headers: {
-        authorization: token ? `Bearer ${token}` : '',
-      },
-    });
+      await AsyncStorage.multiSet([
+        ['@AnimeLain:token', token],
+        ['@AnimeLain:user', JSON.stringify(user)],
+      ]);
 
-    client.setLink(link);
+      const link = createHttpLink({
+        uri: 'http://192.168.0.49:3333/graphql',
+        headers: {
+          authorization: token ? `Bearer ${token}` : '',
+        },
+      });
 
-    setData({ token, user });
-  }, []);
+      client.setLink(link);
+
+      setAuthData({ token, user });
+    },
+    [createSession],
+  );
 
   const signOut = useCallback(async () => {
     await AsyncStorage.multiRemove(['@AnimeLain:token', '@AnimeLain:user']);
 
-    setData({} as AuthState);
+    setAuthData({} as AuthState);
   }, []);
 
   const updateUser = useCallback(
     async (user: User) => {
       await AsyncStorage.setItem('@AnimeLain:user', JSON.stringify(user));
 
-      setData({
-        token: data.token,
+      setAuthData({
+        token: authData.token,
         user,
       });
     },
 
-    [data.token],
+    [authData.token],
   );
 
   return (
     <AuthContext.Provider
-      value={{ user: data.user, signIn, signOut, updateUser, loading }}
+      value={{ user: authData.user, signIn, signOut, updateUser, loading }}
     >
       {children}
     </AuthContext.Provider>

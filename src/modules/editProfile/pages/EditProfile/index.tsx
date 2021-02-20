@@ -20,6 +20,7 @@ import {
 } from './styles';
 import Input from '../../../../shared/components/Input';
 import getValidationErrors from '../../../../shared/utils/getValidationErrors';
+import { UpdateUser } from '../../../../types/graphql-types';
 
 interface SaveProfileData {
   name: string;
@@ -45,7 +46,7 @@ const UPDATE_USER = gql`
 
 const EditProfile: React.FC = () => {
   const { user, updateUser } = useAuth();
-  const [updateUserMutation, { data }] = useMutation(UPDATE_USER);
+  const [updateUserMutation] = useMutation<UpdateUser>(UPDATE_USER);
   const navigation = useNavigation();
 
   const formRef = useRef<FormHandles>(null);
@@ -77,9 +78,11 @@ const EditProfile: React.FC = () => {
           },
         });
 
-        updateUser(response.data.updateUser);
+        if (response.data) {
+          updateUser(response.data.updateUser);
 
-        navigation.goBack();
+          navigation.goBack();
+        }
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);

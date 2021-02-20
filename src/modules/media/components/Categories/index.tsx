@@ -1,11 +1,10 @@
 import React from 'react';
-
-import { Media } from '../../pages/Media';
+import { ListMedia_media } from '../../../../types/graphql-types';
 
 import { CategoryText, Container, Title, CategoryButton } from './styles';
 
 interface Props {
-  media: Media;
+  media: ListMedia_media;
 }
 
 const Categories: React.FC<Props> = ({ media }) => {

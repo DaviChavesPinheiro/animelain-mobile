@@ -7,47 +7,7 @@ import Description from '../../components/Description';
 import Categories from '../../components/Categories';
 import Main from '../../components/Main';
 import { BackButton, Container, Header, HeaderIcon } from './styles';
-
-export interface Character {
-  id: string;
-  name: string;
-  coverImageUrl?: string;
-}
-
-interface MediaCharacter {
-  id: string;
-  role: string;
-  node: Character;
-}
-
-interface Category {
-  id: string;
-  name: string;
-}
-
-interface MediaCategory {
-  id: string;
-  score: number;
-  node: Category;
-}
-
-export interface Media {
-  id: string;
-  title: string;
-  type: string;
-  episodesAmount?: number;
-  authors?: string;
-  description?: string;
-  isFavorited?: boolean;
-  coverImageUrl?: string;
-  bannerImageUrl?: string;
-  categories: {
-    edges: MediaCategory[];
-  };
-  characters: {
-    edges: MediaCharacter[];
-  };
-}
+import { ListMedia, ListMedia_media } from '../../../../types/graphql-types';
 
 const LIST_MEDIA = gql`
   query ListMedia($id: String!) {
@@ -60,6 +20,7 @@ const LIST_MEDIA = gql`
       isFavorited
       coverImageUrl
       bannerImageUrl
+      episodesAmount
       categories(input: { page: 1, perPage: 50 }) {
         edges {
           id
@@ -86,15 +47,17 @@ const LIST_MEDIA = gql`
 `;
 
 const Media: React.FC = () => {
-  const route = useRoute<RouteProp<{ params: { media: Media } }, 'params'>>();
-  const { data, loading } = useQuery(LIST_MEDIA, {
+  const route = useRoute<
+    RouteProp<{ params: { media: ListMedia_media } }, 'params'>
+  >();
+  const { data, loading } = useQuery<ListMedia>(LIST_MEDIA, {
     variables: {
       id: route.params.media.id,
     },
   });
   const navigation = useNavigation();
 
-  if (loading) return null;
+  if (loading || !data || !data.media) return null;
   return (
     <Container>
       <Header>
