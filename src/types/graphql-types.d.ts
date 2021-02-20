@@ -74,6 +74,7 @@ export interface CreateUserVariables {
 export interface CreateUserCharacter_createUserCharacter {
   __typename: "UserCharacter";
   id: string;
+  userCharacterStatus: UserCharacterStatus;
 }
 
 export interface CreateUserCharacter {
@@ -98,6 +99,7 @@ export interface CreateUserCharacterVariables {
 export interface DeleteUserCharacter_deleteUserCharacter {
   __typename: "UserCharacter";
   id: string;
+  userCharacterStatus: UserCharacterStatus;
 }
 
 export interface DeleteUserCharacter {

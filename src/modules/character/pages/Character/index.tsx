@@ -11,7 +11,7 @@ import Main from '../../components/Main';
 
 import { BackButton, Container, Header, HeaderIcon } from './styles';
 
-const LIST_CHARACTER = gql`
+export const LIST_CHARACTER = gql`
   query ListCharacter($id: String!) {
     character(id: $id) {
       id
@@ -30,14 +30,14 @@ const Character: React.FC = () => {
   const route = useRoute<
     RouteProp<{ params: { character: ListCharacter_character } }, 'params'>
   >();
-  const { data, loading, refetch } = useQuery<ListCharacter>(LIST_CHARACTER, {
+  const { data, loading } = useQuery<ListCharacter>(LIST_CHARACTER, {
     variables: {
       id: route.params.character.id,
     },
   });
   const navigation = useNavigation();
 
-  if (loading || !data) return null;
+  if (loading || !data || !data.character) return null;
   return (
     <Container>
       <Header>
@@ -47,12 +47,9 @@ const Character: React.FC = () => {
       </Header>
 
       <ScrollView>
-        <Main
-          character={data.character || undefined}
-          refetchCharacter={refetch}
-        />
+        <Main character={data.character} />
 
-        <Description character={data.character || undefined} />
+        <Description character={data.character} />
       </ScrollView>
     </Container>
   );

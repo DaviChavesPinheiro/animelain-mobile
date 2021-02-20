@@ -2,10 +2,12 @@ import { gql, useMutation } from '@apollo/client';
 import React, { useCallback } from 'react';
 import {
   CreateUserCharacter,
+  CreateUserCharacterVariables,
   DeleteUserCharacter,
   ListCharacter_character,
 } from '../../../../types/graphql-types';
 import { useAuth } from '../../../auth/hooks/auth';
+import { LIST_CHARACTER } from '../../pages/Character';
 
 import {
   Author,
@@ -21,8 +23,14 @@ import {
 } from './styles';
 
 interface Props {
-  character?: ListCharacter_character;
-  refetchCharacter(): Promise<any>;
+  character: ListCharacter_character;
+}
+
+// eslint-disable-next-line no-shadow
+enum UserCharacterStatus {
+  FAVORITE = 'FAVORITE',
+  FOLLOW = 'FOLLOW',
+  HATE = 'HATE',
 }
 
 const CREATE_USER_CHARACTER = gql`
@@ -39,6 +47,7 @@ const CREATE_USER_CHARACTER = gql`
       }
     ) {
       id
+      userCharacterStatus
     }
   }
 `;
@@ -56,18 +65,89 @@ const DELETE_USER_CHARACTER = gql`
       }
     ) {
       id
+      userCharacterStatus
     }
   }
 `;
 
-const Main: React.FC<Props> = ({ character, refetchCharacter }) => {
+const Main: React.FC<Props> = ({ character }) => {
   const { user } = useAuth();
 
-  const [createUserCharacter] = useMutation<CreateUserCharacter>(
-    CREATE_USER_CHARACTER,
-  );
+  const [createUserCharacter] = useMutation<
+    CreateUserCharacter,
+    CreateUserCharacterVariables
+  >(CREATE_USER_CHARACTER, {
+    update(cache, fetchData) {
+      if (
+        fetchData.data?.createUserCharacter.userCharacterStatus ===
+        UserCharacterStatus.FAVORITE
+      ) {
+        cache.writeQuery({
+          query: LIST_CHARACTER,
+          variables: {
+            id: character.id,
+          },
+          data: {
+            character: {
+              isFavorited: true,
+            },
+          },
+        });
+      } else if (
+        fetchData.data?.createUserCharacter.userCharacterStatus ===
+        UserCharacterStatus.FOLLOW
+      ) {
+        cache.writeQuery({
+          query: LIST_CHARACTER,
+          variables: {
+            id: character.id,
+          },
+          data: {
+            character: {
+              isFollowed: true,
+            },
+          },
+        });
+      }
+    },
+  });
   const [deleteUserCharacter] = useMutation<DeleteUserCharacter>(
     DELETE_USER_CHARACTER,
+    {
+      update(cache, fetchData) {
+        if (
+          fetchData.data?.deleteUserCharacter.userCharacterStatus ===
+          UserCharacterStatus.FAVORITE
+        ) {
+          cache.writeQuery({
+            query: LIST_CHARACTER,
+            variables: {
+              id: character.id,
+            },
+            data: {
+              character: {
+                isFavorited: false,
+              },
+            },
+          });
+        } else if (
+          fetchData.data?.deleteUserCharacter.userCharacterStatus ===
+          UserCharacterStatus.FOLLOW
+        ) {
+          cache.writeQuery({
+            query: LIST_CHARACTER,
+            variables: {
+              id: character.id,
+            },
+            data: {
+              character: {
+                isFollowed: false,
+              },
+            },
+          });
+        }
+      },
+    },
   );
 
   const handleToogleFavorite = useCallback(async () => {
@@ -76,7 +156,7 @@ const Main: React.FC<Props> = ({ character, refetchCharacter }) => {
         variables: {
           userId: user.id,
           characterId: character?.id,
-          userCharacterStatus: 'FAVORITE',
+          userCharacterStatus: UserCharacterStatus.FAVORITE,
         },
       });
     } else {
@@ -84,17 +164,15 @@ const Main: React.FC<Props> = ({ character, refetchCharacter }) => {
         variables: {
           userId: user.id,
           characterId: character?.id,
-          userCharacterStatus: 'FAVORITE',
+          userCharacterStatus: UserCharacterStatus.FAVORITE,
         },
       });
     }
-    await refetchCharacter();
   }, [
     createUserCharacter,
     deleteUserCharacter,
     character?.id,
     character?.isFavorited,
-    refetchCharacter,
     user.id,
   ]);
 
@@ -104,7 +182,7 @@ const Main: React.FC<Props> = ({ character, refetchCharacter }) => {
         variables: {
           userId: user.id,
           characterId: character?.id,
-          userCharacterStatus: 'FOLLOW',
+          userCharacterStatus: UserCharacterStatus.FOLLOW,
         },
       });
     } else {
@@ -112,17 +190,15 @@ const Main: React.FC<Props> = ({ character, refetchCharacter }) => {
         variables: {
           userId: user.id,
           characterId: character?.id,
-          userCharacterStatus: 'FOLLOW',
+          userCharacterStatus: UserCharacterStatus.FOLLOW,
         },
       });
     }
-    await refetchCharacter();
   }, [
     createUserCharacter,
     deleteUserCharacter,
     character?.id,
     character?.isFollowed,
-    refetchCharacter,
     user.id,
   ]);
 
